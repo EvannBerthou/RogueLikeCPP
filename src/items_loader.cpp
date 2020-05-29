@@ -21,6 +21,19 @@ static std::string remove_trailing_whitespaces(const std::string &s) {
     return rtrim(ltrim(s));
 }
 
+static ItemType get_type_from_str(const std::string &s) {
+    if (s == "weapon") return ItemType::Weapon;
+    if (s == "armor")  return ItemType::Armor;
+    if (s == "effect") return ItemType::Effect;
+    return ItemType::Undefined;
+}
+
+static ItemEffect get_effect_from_str(const std::string &s) {
+    if (s == "heal") return ItemEffect::Heal;
+    if (s == "damage") return ItemEffect::Damage;
+    return ItemEffect::None;
+}
+
 std::unordered_map<std::string, item_t> load_items(texture_dict &textures) {
     std::unordered_map<std::string, item_t> items =  {};
 
@@ -81,6 +94,25 @@ std::unordered_map<std::string, item_t> load_items(texture_dict &textures) {
                         std::cout << "the given rarity is not an int for : " << item_name << std::endl;
                     }
                     current_item.rarity = rarity;
+                }
+                if (read.rfind("type:", 0) == 0) {
+                    std::string type_str = read.substr(strlen("type:"));
+                    current_item.type = get_type_from_str(type_str);
+                }
+                if (read.rfind("effect:", 0) == 0) {
+                    std::string effect_str = read.substr(strlen("effect:"));
+                    current_item.effect = get_effect_from_str(effect_str);
+                }
+                if (read.rfind("amount:", 0) == 0) {
+                    std::string amount_str  = read.substr(strlen("amount:"));
+                    int amount = 0;
+                    if (!amount_str.empty() && std::all_of(amount_str.begin(),amount_str.end(),::isdigit)){
+                        amount = std::atoi(amount_str.c_str());
+                    }
+                    else {
+                        std::cout << "the given amount is not an int for : " << item_name << std::endl;
+                    }
+                    current_item.amount = amount;
                 }
             }
         }

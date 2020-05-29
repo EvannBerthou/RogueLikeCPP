@@ -53,6 +53,8 @@ typedef struct {
  *          valeur en argent
  *          stats (dégat, armure...)
  *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
+ *          Consommer OK
+ *          Répartir les effets dans différentes fonctions
  * Ajouter sorts
  *      Dégats de zone
  *      Dégats ciblés
@@ -70,7 +72,7 @@ typedef struct {
  *      Inclure les diagonales dans les zones
  *      Différent type de zone:
  *          Cercle, ligne, éloignés du joueur
- *      Détecter quelle case est cliquée dans la zone
+ *      Détecter quelle case est cliquée dans la zone OK
  *      Raccourcis clavier pour choisir le sort
  *      Cooldown (tours)
  *
@@ -128,10 +130,12 @@ int main(){
     generate_tiles(&d, room_textures, renderer);
     player_t player = {&d.rooms[0]};
     player.inventory.init_inventory();
-    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("item");
+    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
     camera_t camera(renderer);
 
     d.rooms.at(0).items.push_back({2,5, items["sword"]});
+    d.rooms.at(0).items.push_back({8,2, items["heal"] });
+    d.rooms.at(0).items.push_back({9,2, items["damage"] });
     d.rooms.at(0).items.push_back({4,5, items["wand"] });
     d.rooms.at(1).items.push_back({7,5, items["ds"]   });
     d.rooms.at(0).chests.push_back({3,8, items_textures.get_texture_by_name("chest")});
@@ -169,6 +173,7 @@ int main(){
             case SDL_MOUSEBUTTONDOWN:
                 player.spells.select_spell(player.x, player.y, x,y);
                 player.spells.cast(camera, x,y);
+                player.consume(x,y);
                 break;
             }
         }

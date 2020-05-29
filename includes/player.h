@@ -5,8 +5,8 @@
 #include "room.h"
 #include "camera.h"
 #include "textures.h"
-#include "inventory.h"
 #include "spell_manager.h"
+#include "inventory.h"
 
 typedef struct {
     room_t *in_room;
@@ -24,6 +24,7 @@ typedef struct {
     void update(double dt);
     void move(SDL_Event event, camera_t *camera);
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
+    void consume(int m_x, int m_y);
 } player_t;
 
 #endif

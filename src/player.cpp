@@ -107,3 +107,18 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);
 
 }
+
+void player_t::consume(int m_x, int m_y) {
+    if (!inventory.active) return;
+
+    auto hovered = inventory.slot_hovered(m_x, m_y);
+    if (hovered == NULL) return;
+
+    if (hovered->type == ItemType::Effect){
+        if (hovered->effect == ItemEffect::Heal)
+            health += hovered->amount;
+        if (hovered->effect == ItemEffect::Damage)
+            health -= hovered->amount;
+        inventory.remove_item(hovered);
+    }
+}

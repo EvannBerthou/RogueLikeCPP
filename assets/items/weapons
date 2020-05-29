@@ -2,6 +2,9 @@
 #   description:
 #   texture: in game texture name, not path
 #   rarity: 0 = commun; 1 = rare; ...
+#   type:weapon,armor,effect
+#   effect:heal,regen,more health..
+#   amount:int
 #}
 
 sword {
@@ -22,4 +25,24 @@ ds {
     name:GROSSE DS DE OUF MEC
     description:MEC TEMA LA TAILLE DE LA DS
     texture:ds
+}
+
+heal {
+    name:healing potion
+    description:regen 50hp
+    texture:healing_potion
+    rarity:1
+    type:effect
+    effect:heal
+    amount:50
+}
+
+damage {
+    name:damage potion
+    description:damage 50hp
+    texture:healing_potion
+    rarity:1
+    type:effect
+    effect:damage
+    amount:50
 }

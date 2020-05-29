@@ -90,3 +90,14 @@ item_t *inventory_t::slot_hovered(int m_x, int m_y) {
     }
     return NULL;
 }
+
+
+void inventory_t::remove_item(item_t *item) {
+    for (int i = 0; i < INVENTORY_SIZE; ++i) {
+        if (&m_slots[i].item == item) {
+            m_slots[i].item.id = -1;
+            m_slots[i].item_count = 0;
+            return;
+        }
+    }
+}
