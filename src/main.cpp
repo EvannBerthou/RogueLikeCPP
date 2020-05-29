@@ -1,0 +1,200 @@
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
+#include <stdio.h>
+#include <vector>
+#include <iostream>
+#include <ctime>
+#include <chrono>
+#include "dungeon.h"
+#include "room.h"
+#include "player.h"
+#include "camera.h"
+#include "fonts.h"
+#include "textures.h"
+#include "items_loader.h"
+
+#define WIDTH 800
+#define HEIGHT 600
+
+typedef struct {
+    using clock = std::chrono::time_point<std::chrono::steady_clock>;
+    clock LAST = std::chrono::steady_clock::now();
+    clock NOW  = std::chrono::steady_clock::now();
+    double dt = 0;
+
+    void tick() {
+        NOW = std::chrono::steady_clock::now();
+        std::chrono::duration<double, std::milli> diff = (NOW - LAST);
+        dt = diff.count();
+        //std::cout << 1 / dt * 1000 << std::endl;
+        LAST = NOW;
+    }
+} fps_clock_t;
+
+/*
+ * TODO:
+ * GAMEPLAY:
+ * Trouver un objectif au jeu ?
+ *      Rogue like
+ *      Tour par tour sur plateau
+ *      Différents sorts pour attaquer les ennemies
+ *
+ * Ajouter des ennemies
+ * Ajouter coffres
+ *      Détecter la collision avec les coffres OK
+ *      Ouvrir un menu avec le contenue du coffre lors de la collision
+ * Ajouter inventaire
+ *      Tooltip sur les items
+ *          nom OK
+ *          description OK
+ *          rareté
+ *          effets
+ *          valeur en argent
+ *          stats (dégat, armure...)
+ *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
+ * Ajouter sorts
+ *      Dégats de zone
+ *      Dégats ciblés
+ *      Status, soins
+ * Portes qui s'ouvrent avec des clés
+ * Rooms piégés (impossible de sortir tant que les monstres ne sont pas mort)
+ * Différents étages avec plus de difficultés
+ * Systeme de progression même à la mort du joueur
+ *      Pouvoir augmenter ses stats
+ *      Commencer les games avec du meilleurs équipement
+ * Items dans des fichiers externes pour ne pas avoir a recompiler à chaque fois
+ * Ajouter un systeme d'argent
+ * Ajouter un chat de log des combats/objects, argent obtenues
+ * Ajouter des décorations aux salles
+ * Meilleur parsing des items
+ *      Plus de messages d'erreurs
+ *
+ * TECHNIQUE:
+ * La vitesse du joueur dépend du repeat key
+ * Support des résolutions sans pouvoir voir les autres rooms
+ */
+
+int main(){
+    if (SDL_Init(SDL_INIT_VIDEO) < 0){
+        printf("Could not initialize SDL: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Window *window = NULL;
+    window = SDL_CreateWindow("Dungeon", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                              WIDTH, HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+    if (window == NULL){
+        printf("Error while creating the window %s\n", SDL_GetError());
+        return 1;
+    }
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1,
+                                                SDL_RENDERER_PRESENTVSYNC |
+                                                SDL_RENDERER_ACCELERATED);
+
+    if (renderer == NULL) {
+        printf("Error while creating the renderer: %s\n", SDL_GetError());
+        return 1;
+    }
+
+    if (TTF_Init() == -1){
+        printf("Error while init TTF: %s\n", TTF_GetError());
+        return 1;
+    }
+
+    IMG_Init(IMG_INIT_PNG);
+    TTF_Font *font = create_font("font.ttf", 32);
+
+    //SDL_RenderSetLogicalSize(renderer, 800,600);
+
+    auto room_textures = texture_dict();
+    load_room_textures(room_textures, renderer);
+    auto items_textures = texture_dict();
+    load_item_textures(items_textures, renderer);
+    auto characters_textures = texture_dict();
+    load_characters_textures(characters_textures, renderer);
+
+    auto items = load_items(items_textures);
+
+    dungeon_t d = generate_dungeon(time(NULL),5,5,10);
+    generate_tiles(&d, room_textures, renderer);
+    player_t player = {&d.rooms[0]};
+    player.inventory.init_inventory();
+    camera_t camera(renderer);
+
+    d.rooms.at(0).items.push_back({2,5, items["sword"]});
+    d.rooms.at(0).items.push_back({4,5, items["wand"] });
+    d.rooms.at(1).items.push_back({7,5, items["ds"]   });
+    d.rooms.at(0).chests.push_back({3,8, items_textures.get_texture_by_name("chest")});
+
+    auto fps_clock = fps_clock_t();
+
+    int offset = 100;
+
+    SDL_Event event;
+    int running = 1;
+    while (running) {
+        std::string title = "Titre " + std::to_string(fps_clock.dt) + " ms";
+        SDL_SetWindowTitle(window, title.c_str());
+
+        SDL_SetRenderDrawColor(renderer, 37,19,26,255);
+        SDL_RenderClear(renderer);
+
+        int x, y;
+        SDL_GetMouseState(&x,&y);
+
+        while (SDL_PollEvent(&event)){
+            switch (event.type){
+            case SDL_QUIT:
+                running = 0;
+                break;
+            case SDL_KEYDOWN:
+                if (!camera.in_transisition) player.move(event, &camera);
+                if (event.key.keysym.sym == SDLK_e) player.health -= 10;
+                if (event.key.keysym.sym == SDLK_f) player.inventory.active = !player.inventory.active;
+                if (event.key.keysym.sym == SDLK_TAB) {
+                    camera.tile_size = camera.tile_size == 50 ? 10 : 50;
+                    offset = camera.tile_size * 2;
+                }
+            }
+        }
+
+        camera.update(fps_clock.dt);
+        player.update(fps_clock.dt);
+        item_t *hovered_item = player.inventory.slot_hovered(x,y);
+
+        //Center camera on the room where the player is
+        if (!camera.in_transisition){
+            camera.x = player.in_room->x * (15 * camera.tile_size + offset) - 25;
+            camera.y = player.in_room->y * (11 * camera.tile_size + offset) - 25;
+        }
+
+        for (auto &room: d.rooms) {
+            room.render(camera, offset);
+            for (auto &item: room.items) item.update(fps_clock.dt);
+        }
+
+        player.render(camera, offset, characters_textures);
+        player.inventory.render(camera, items_textures);
+        if (hovered_item != NULL)
+            player.inventory.render_tooltip(camera, items_textures, hovered_item, font, x,y);
+        render_text(renderer, font, std::to_string(player.health).c_str(),{55,5}, {255,255,0,255});
+
+        SDL_RenderPresent(renderer);
+        fps_clock.tick();
+        SDL_Delay(1);
+    }
+
+    d.free();
+    room_textures.free();
+    items_textures.free();
+    characters_textures.free();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+    TTF_CloseFont(font);
+    TTF_Quit();
+    return 0;
+}

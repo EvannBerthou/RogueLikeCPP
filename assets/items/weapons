@@ -1,0 +1,25 @@
+# data_name {
+#   description:
+#   texture: in game texture name, not path
+#   rarity: 0 = commun; 1 = rare; ...
+#}
+
+sword {
+    name:épée
+    description:épée stylée
+    texture:sword
+    rarity:1
+}
+
+wand {
+    name:baton
+    description:baton de ouf là
+    texture:wand
+    rarity:0
+}
+
+ds {
+    name:GROSSE DS DE OUF MEC
+    description:MEC TEMA LA TAILLE DE LA DS
+    texture:ds
+}
