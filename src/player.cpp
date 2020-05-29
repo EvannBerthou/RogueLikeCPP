@@ -88,6 +88,8 @@ void player_t::move(SDL_Event event, camera_t *camera) {
             }
         }
     }
+    if (spells.selected_spell != -1)
+        spells.spells.at(spells.selected_spell).set_spell_zone(x, y);
 }
 
 void player_t::render(camera_t &camera, int offset, texture_dict &characters_textures) {
@@ -103,4 +105,5 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
 
     SDL_Rect health_rect = {5,5, (int)(this->health * 1.5), 30};
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);
+
 }

@@ -48,7 +48,7 @@ typedef struct {
  *      Tooltip sur les items
  *          nom OK
  *          description OK
- *          rareté
+ *          rareté OK
  *          effets
  *          valeur en argent
  *          stats (dégat, armure...)
@@ -63,16 +63,22 @@ typedef struct {
  * Systeme de progression même à la mort du joueur
  *      Pouvoir augmenter ses stats
  *      Commencer les games avec du meilleurs équipement
- * Items dans des fichiers externes pour ne pas avoir a recompiler à chaque fois
  * Ajouter un systeme d'argent
  * Ajouter un chat de log des combats/objects, argent obtenues
  * Ajouter des décorations aux salles
- * Meilleur parsing des items
- *      Plus de messages d'erreurs
+ * Sorts:
+ *      Inclure les diagonales dans les zones
+ *      Différent type de zone:
+ *          Cercle, ligne, éloignés du joueur
+ *      Détecter quelle case est cliquée dans la zone
+ *      Raccourcis clavier pour choisir le sort
+ *      Cooldown (tours)
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * Support des résolutions sans pouvoir voir les autres rooms
+ * Meilleur parsing des items
+ *      Plus de messages d'erreurs
  */
 
 int main(){
@@ -122,6 +128,7 @@ int main(){
     generate_tiles(&d, room_textures, renderer);
     player_t player = {&d.rooms[0]};
     player.inventory.init_inventory();
+    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("item");
     camera_t camera(renderer);
 
     d.rooms.at(0).items.push_back({2,5, items["sword"]});
@@ -158,6 +165,11 @@ int main(){
                     camera.tile_size = camera.tile_size == 50 ? 10 : 50;
                     offset = camera.tile_size * 2;
                 }
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                player.spells.select_spell(player.x, player.y, x,y);
+                player.spells.cast(camera, x,y);
+                break;
             }
         }
 
@@ -181,6 +193,10 @@ int main(){
         if (hovered_item != NULL)
             player.inventory.render_tooltip(camera, items_textures, hovered_item, font, x,y);
         render_text(renderer, font, std::to_string(player.health).c_str(),{55,5}, {255,255,0,255});
+
+
+        //spell bar
+        player.spells.render(camera, items_textures, x,y);
 
         SDL_RenderPresent(renderer);
         fps_clock.tick();

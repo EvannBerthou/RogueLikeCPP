@@ -6,6 +6,7 @@
 #include "camera.h"
 #include "textures.h"
 #include "inventory.h"
+#include "spell_manager.h"
 
 typedef struct {
     room_t *in_room;
@@ -18,6 +19,7 @@ typedef struct {
     int max_health = 100;
     int health = max_health;
     inventory_t inventory = {};
+    spells_t spells = {};
 
     void update(double dt);
     void move(SDL_Event event, camera_t *camera);
