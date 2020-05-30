@@ -3,6 +3,9 @@
 
 #include <SDL2/SDL.h>
 #include "vec2.h"
+struct room_t;
+typedef struct room_t room_t;
+#include "room.h"
 
 typedef struct camera_t {
     float x = -5;
@@ -17,7 +20,8 @@ typedef struct camera_t {
     void render_texture_static(SDL_Texture *texture, SDL_Rect *rect, bool flip = false);
 
     void update(double dt);
-    void begin_transistion(float from_x, float from_y, float to_x, float to_y);
+    void begin_transistion(room_t *from, room_t *to);
+    room_t *prev_room = NULL;
 
     float to_x = 0;
     float to_y = 0;

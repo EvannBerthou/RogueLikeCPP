@@ -55,6 +55,7 @@ typedef struct {
  *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
  *          Consommer OK
  *          Répartir les effets dans différentes fonctions
+ *      Clique droit pour drop les items par terre
  * Ajouter sorts
  *      Dégats de zone
  *      Dégats ciblés
@@ -79,8 +80,10 @@ typedef struct {
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * Support des résolutions sans pouvoir voir les autres rooms
+ * Garder les room centrés au changement de résolution
  * Meilleur parsing des items
  *      Plus de messages d'erreurs
+ * render_text est lent a cause du SDL_DestroyTexture()
  */
 
 int main(){
@@ -165,10 +168,6 @@ int main(){
                 if (!camera.in_transisition) player.move(event, &camera);
                 if (event.key.keysym.sym == SDLK_e) player.health -= 10;
                 if (event.key.keysym.sym == SDLK_f) player.inventory.active = !player.inventory.active;
-                if (event.key.keysym.sym == SDLK_TAB) {
-                    camera.tile_size = camera.tile_size == 50 ? 10 : 50;
-                    offset = camera.tile_size * 2;
-                }
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 player.spells.select_spell(player.x, player.y, x,y);
@@ -180,7 +179,6 @@ int main(){
 
         camera.update(fps_clock.dt);
         player.update(fps_clock.dt);
-        item_t *hovered_item = player.inventory.slot_hovered(x,y);
 
         //Center camera on the room where the player is
         if (!camera.in_transisition){
@@ -188,13 +186,16 @@ int main(){
             camera.y = player.in_room->y * (11 * camera.tile_size + offset) - 25;
         }
 
-        for (auto &room: d.rooms) {
-            room.render(camera, offset);
-            for (auto &item: room.items) item.update(fps_clock.dt);
+        player.in_room->update(fps_clock.dt);
+        player.in_room->render(camera, offset);
+        if (camera.in_transisition) {
+            camera.prev_room->update(fps_clock.dt);
+            camera.prev_room->render(camera, offset);
         }
 
         player.render(camera, offset, characters_textures);
         player.inventory.render(camera, items_textures);
+        item_t *hovered_item = player.inventory.slot_hovered(x,y);
         if (hovered_item != NULL)
             player.inventory.render_tooltip(camera, items_textures, hovered_item, font, x,y);
         render_text(renderer, font, std::to_string(player.health).c_str(),{55,5}, {255,255,0,255});

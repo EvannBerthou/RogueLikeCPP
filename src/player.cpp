@@ -65,7 +65,7 @@ void player_t::move(SDL_Event event, camera_t *camera) {
         if (dir != -1){
             if (in_room->doors[dir] != NULL){
                 room_t *new_room = in_room->doors[dir];
-                camera->begin_transistion(in_room->x, in_room->y, new_room->x, new_room->y);
+                camera->begin_transistion(in_room, new_room);
                 in_room = new_room;
                 switch(dir){
                     case 0:

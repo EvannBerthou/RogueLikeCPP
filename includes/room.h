@@ -7,6 +7,8 @@
 #include "tile.h"
 #include "world_item.h"
 #include "chest.h"
+struct camera_t;
+typedef struct camera_t camera_t;
 #include "camera.h"
 
 typedef struct room_t {
@@ -50,6 +52,7 @@ typedef struct room_t {
     }
 
     void render (camera_t &camera, int offset);
+    void update (float dt);
 } room_t;
 
 #endif

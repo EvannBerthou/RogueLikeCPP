@@ -22,3 +22,8 @@ void room_t::render (camera_t &camera, int offset){
         camera.render_texture(chest.texture, &rect);
     }
 }
+
+void room_t::update(float dt) {
+    for (auto &item: items)
+        item.update(dt);
+}

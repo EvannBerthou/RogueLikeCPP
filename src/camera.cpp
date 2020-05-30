@@ -42,14 +42,15 @@ void camera_t::render_texture_static(SDL_Texture *texture, SDL_Rect *rect, bool 
     SDL_RenderCopyEx(renderer, texture, NULL, rect, 0, NULL, flip ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
-void camera_t::begin_transistion(float from_x, float from_y, float to_x, float to_y){
-    dir = vec2((to_x - from_x), (to_y - from_y)).normalized();
+void camera_t::begin_transistion(room_t *from, room_t *to) {
+    dir = vec2((to->x - from->x), (to->y - from->y)).normalized();
     if (dir.x != 0) transition_distance = 15.0f * tile_size + tile_size * 2;
     if (dir.y != 0) transition_distance = 11.0f * tile_size + tile_size * 2;
 
     transition_time = 0;
     in_transisition = true;
 
-    this->to_x = to_x;
-    this->to_y = to_y;
+    this->to_x = to->x;
+    this->to_y = to->y;
+    prev_room = from;
 }
