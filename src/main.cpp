@@ -82,8 +82,6 @@ typedef struct {
  * Meilleur parsing des items
  *      Plus de messages d'erreurs
  * render_text est lent a cause du SDL_DestroyTexture()
- * remplacer les "int x, int y" par des vec2
- * Camera::draw_to_room() pour dessiner avec l'offset de la room
  */
 
 int main(){
@@ -170,11 +168,16 @@ int main(){
             case SDL_KEYDOWN:
                 if (!camera.in_transisition) player.move(event, &camera);
                 if (event.key.keysym.sym == SDLK_e) player.health -= 10;
-                if (event.key.keysym.sym == SDLK_f) player.inventory.active = !player.inventory.active;
+                if (event.key.keysym.sym == SDLK_f) {
+                    player.inventory.active = !player.inventory.active;
+                    player.spells.selected_spell = -1;
+                }
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                player.spells.select_spell(camera, {player.x, player.y}, mp);
-                player.spells.cast(mp);
+                if (!player.inventory.active) {
+                    player.spells.select_spell(camera, {player.x, player.y}, mp);
+                    player.spells.cast(mp);
+                }
                 player.consume(player.inventory.slot_hovered(camera, mp));
                 break;
             }
