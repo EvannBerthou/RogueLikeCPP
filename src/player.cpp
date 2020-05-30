@@ -94,10 +94,12 @@ void player_t::move(SDL_Event event, camera_t *camera) {
 
 void player_t::render(camera_t &camera, int offset, texture_dict &characters_textures) {
     SDL_Rect player_rect;
-    player_rect = {this->x * camera.tile_size
-                   + this->in_room->x * (15 * camera.tile_size + offset),
-                   this->y * camera.tile_size
-                   + this->in_room->y * (11 * camera.tile_size + offset),
+
+    int center_x = camera.w / 2 - (15*camera.tile_size + camera.tile_size) / 2;
+    int center_y = camera.h / 2 - (11*camera.tile_size + camera.tile_size) / 2;
+
+    player_rect = {x * camera.tile_size + center_x + in_room->x * (15 * camera.tile_size + offset),
+                   y * camera.tile_size + center_y + in_room->y * (11 * camera.tile_size + offset),
                    camera.tile_size, camera.tile_size};
     std::string texture_to_load = "player" + std::to_string(this->frame);
     camera.render_texture(characters_textures.get_texture_by_name(texture_to_load),

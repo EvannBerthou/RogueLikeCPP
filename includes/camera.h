@@ -10,6 +10,7 @@ typedef struct room_t room_t;
 typedef struct camera_t {
     float x = -5;
     float y = -5;
+    int w = 0, h = 0;
     int tile_size = 50;
     SDL_Renderer *renderer;
 

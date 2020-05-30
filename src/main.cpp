@@ -79,11 +79,10 @@ typedef struct {
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
- * Support des résolutions sans pouvoir voir les autres rooms
- * Garder les room centrés au changement de résolution
  * Meilleur parsing des items
  *      Plus de messages d'erreurs
  * render_text est lent a cause du SDL_DestroyTexture()
+ * remplacer les "int x, int y" par des vec2
  */
 
 int main(){
@@ -153,6 +152,8 @@ int main(){
         std::string title = "Titre " + std::to_string(fps_clock.dt) + " ms";
         SDL_SetWindowTitle(window, title.c_str());
 
+        SDL_GetWindowSize(window, &camera.w, &camera.h);
+
         SDL_SetRenderDrawColor(renderer, 37,19,26,255);
         SDL_RenderClear(renderer);
 
@@ -170,7 +171,7 @@ int main(){
                 if (event.key.keysym.sym == SDLK_f) player.inventory.active = !player.inventory.active;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                player.spells.select_spell(player.x, player.y, x,y);
+                player.spells.select_spell(camera, player.x, player.y, x,y);
                 player.spells.cast(camera, x,y);
                 player.consume(x,y);
                 break;
