@@ -89,7 +89,7 @@ void player_t::move(SDL_Event event, camera_t *camera) {
         }
     }
     if (spells.selected_spell != -1)
-        spells.spells.at(spells.selected_spell).set_spell_zone(x, y);
+        spells.spells.at(spells.selected_spell).set_spell_zone({x, y});
 }
 
 void player_t::render(camera_t &camera, int offset, texture_dict &characters_textures) {
@@ -110,17 +110,15 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
 
 }
 
-void player_t::consume(int m_x, int m_y) {
+void player_t::consume(item_t *item) {
     if (!inventory.active) return;
+    if (item == NULL) return;
 
-    auto hovered = inventory.slot_hovered(m_x, m_y);
-    if (hovered == NULL) return;
-
-    if (hovered->type == ItemType::Effect){
-        if (hovered->effect == ItemEffect::Heal)
-            health += hovered->amount;
-        if (hovered->effect == ItemEffect::Damage)
-            health -= hovered->amount;
-        inventory.remove_item(hovered);
+    if (item->type == ItemType::Effect){
+        if (item->effect == ItemEffect::Heal)
+            health += item->amount;
+        if (item->effect == ItemEffect::Damage)
+            health -= item->amount;
+        inventory.remove_item(item);
     }
 }

@@ -53,4 +53,18 @@ void camera_t::begin_transistion(room_t *from, room_t *to) {
     this->to_x = to->x;
     this->to_y = to->y;
     prev_room = from;
+    current_room = to;
+}
+
+void camera_t::rect_room_to_screen(SDL_Rect &rect) {
+    int center_x = w / 2 - (15*tile_size) / 2;
+    int center_y = h / 2 - (11*tile_size) / 2;
+    rect.x = rect.x * tile_size + center_x;
+    rect.y = rect.y * tile_size + center_y;
+}
+
+void camera_t::render_texture_to_room(SDL_Texture *texture, vec2i position, bool flip) {
+    SDL_Rect rect = {position.x, position.y, tile_size, tile_size};
+    rect_room_to_screen(rect);
+    render_texture_static(texture, &rect, flip);
 }

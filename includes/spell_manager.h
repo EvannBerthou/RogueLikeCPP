@@ -5,12 +5,13 @@
 #include "camera.h"
 #include "textures.h"
 #include "spell.h"
+#include "vec2.h"
 
 typedef struct {
     std::vector<spell_t> spells = {{}};
-    void select_spell(camera_t &camera, int p_x, int p_y, int m_x, int m_y);
-    void render(camera_t &camera, texture_dict &textures, int m_x, int m_y);
-    void cast(camera_t &camera, int m_x, int m_y);
+    void select_spell(camera_t &camera, vec2i player_position, vec2i mouse_position);
+    void render(camera_t &camera, texture_dict &textures, vec2i mouse_position);
+    void cast(vec2i mouse_position);
     int selected_spell = -1;
 } spells_t;
 

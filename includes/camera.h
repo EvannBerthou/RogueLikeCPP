@@ -19,10 +19,14 @@ typedef struct camera_t {
     void render_fill_rect(SDL_Color color, SDL_Rect *rect);
     void render_texture(SDL_Texture *texture, SDL_Rect *rect, bool flip = false);
     void render_texture_static(SDL_Texture *texture, SDL_Rect *rect, bool flip = false);
+    void render_texture_to_room(SDL_Texture *texture, vec2i position, bool flip = false);
+
+    void rect_room_to_screen(SDL_Rect &rect);
 
     void update(double dt);
     void begin_transistion(room_t *from, room_t *to);
     room_t *prev_room = NULL;
+    room_t *current_room = NULL;
 
     float to_x = 0;
     float to_y = 0;

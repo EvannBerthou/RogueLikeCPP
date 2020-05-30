@@ -83,6 +83,7 @@ typedef struct {
  *      Plus de messages d'erreurs
  * render_text est lent a cause du SDL_DestroyTexture()
  * remplacer les "int x, int y" par des vec2
+ * Camera::draw_to_room() pour dessiner avec l'offset de la room
  */
 
 int main(){
@@ -134,6 +135,7 @@ int main(){
     player.inventory.init_inventory();
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
     camera_t camera(renderer);
+    camera.current_room = player.in_room;
 
     d.rooms.at(0).items.push_back({2,5, items["sword"]});
     d.rooms.at(0).items.push_back({8,2, items["heal"] });
@@ -157,8 +159,8 @@ int main(){
         SDL_SetRenderDrawColor(renderer, 37,19,26,255);
         SDL_RenderClear(renderer);
 
-        int x, y;
-        SDL_GetMouseState(&x,&y);
+        vec2i mp(0,0);
+        SDL_GetMouseState(&mp.x,&mp.y);
 
         while (SDL_PollEvent(&event)){
             switch (event.type){
@@ -171,9 +173,9 @@ int main(){
                 if (event.key.keysym.sym == SDLK_f) player.inventory.active = !player.inventory.active;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                player.spells.select_spell(camera, player.x, player.y, x,y);
-                player.spells.cast(camera, x,y);
-                player.consume(x,y);
+                player.spells.select_spell(camera, {player.x, player.y}, mp);
+                player.spells.cast(mp);
+                player.consume(player.inventory.slot_hovered(camera, mp));
                 break;
             }
         }
@@ -196,14 +198,14 @@ int main(){
 
         player.render(camera, offset, characters_textures);
         player.inventory.render(camera, items_textures);
-        item_t *hovered_item = player.inventory.slot_hovered(x,y);
+        item_t *hovered_item = player.inventory.slot_hovered(camera, mp);
         if (hovered_item != NULL)
-            player.inventory.render_tooltip(camera, items_textures, hovered_item, font, x,y);
+            player.inventory.render_tooltip(camera, items_textures, hovered_item, font, mp);
         render_text(renderer, font, std::to_string(player.health).c_str(),{55,5}, {255,255,0,255});
 
 
         //spell bar
-        player.spells.render(camera, items_textures, x,y);
+        player.spells.render(camera, items_textures, mp);
 
         SDL_RenderPresent(renderer);
         fps_clock.tick();

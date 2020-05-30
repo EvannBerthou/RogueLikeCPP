@@ -32,10 +32,10 @@ void inventory_t::render(camera_t &camera, texture_dict &textures) {
     if (!active) return;
     int constexpr inv_width  = INVENTORY_SIZE / 2 * SLOT_SIZE;
     int constexpr inv_height = SLOT_SIZE * 2;
-    int offset_x = 400 - inv_width / 2;
-    int offset_y = 300 - inv_height / 2;
+    int offset_x = camera.w / 2 - inv_width / 2;
+    int offset_y = camera.h / 2 - inv_height / 2;
 
-    SDL_Rect bg_rect = { offset_x - 15, offset_x - 15, SLOT_SIZE * 4 + 50, SLOT_SIZE * 2 + 50};
+    SDL_Rect bg_rect = { offset_x - 15, offset_y - 15, SLOT_SIZE * 4 + 50, SLOT_SIZE * 2 + 50};
     camera.render_texture_static(textures.get_texture_by_name("bg"), &bg_rect);
 
     for (int i = 0; i < INVENTORY_SIZE; i++)
@@ -63,26 +63,27 @@ static SDL_Color color_from_rarity(int rarity) {
 }
 
 void inventory_t::render_tooltip(camera_t &camera, texture_dict &textures,
-                                 item_t *item, TTF_Font *font, int m_x,int m_y) {
-    SDL_Rect rect = { m_x, m_y, 225, 125 };
+                                 item_t *item, TTF_Font *font, vec2i mp) {
+    SDL_Rect rect = { mp.x, mp.y, 225, 125 };
     camera.render_texture_static(textures.get_texture_by_name("bg"), &rect);
-    render_text(camera.renderer, font, item->name.c_str(),{m_x+20,m_y+10},color_from_rarity(item->rarity));
-    render_text(camera.renderer, font, item->description.c_str(), {m_x+20,m_y+30}, {255,255,255,255});
+    render_text(camera.renderer, font, item->name.c_str(),{mp.x+20,mp.y+10},
+                color_from_rarity(item->rarity));
+    render_text(camera.renderer, font, item->description.c_str(), {mp.x+20,mp.y+30}, {255,255,255,255});
 }
 
-item_t *inventory_t::slot_hovered(int m_x, int m_y) {
+item_t *inventory_t::slot_hovered(camera_t &camera, vec2i mp) {
     if (!active) return NULL;
     int constexpr inv_width  = INVENTORY_SIZE / 2 * SLOT_SIZE;
     int constexpr inv_height = SLOT_SIZE * 2;
-    int offset_x = 400 - inv_width / 2;
-    int offset_y = 300 - inv_height / 2;
+    int offset_x = camera.w / 2 - inv_width / 2;
+    int offset_y = camera.h / 2 - inv_height / 2;
 
     for (int i = 0; i < INVENTORY_SIZE; i++)
     {
         SDL_Rect rect = { i % (INVENTORY_SIZE / 2) * SLOT_SIZE + offset_x + 15,
                           i / (INVENTORY_SIZE / 2) * SLOT_SIZE + offset_y + 15,
                           SLOT_SIZE, SLOT_SIZE };
-        if (m_x > rect.x && m_x < rect.x + rect.w && m_y > rect.y && m_y < rect.y + rect.h) {
+        if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
             if (m_slots[i].item.id > -1)
                 return &m_slots[i].item;
             return NULL;
