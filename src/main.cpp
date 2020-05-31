@@ -76,6 +76,8 @@ typedef struct {
  *      Détecter quelle case est cliquée dans la zone OK
  *      Raccourcis clavier pour choisir le sort
  *      Cooldown (tours)
+ * Ajouter des stats pour le joueur et les ennemies
+ * Interface avec les stats
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
@@ -168,6 +170,8 @@ int main(){
             case SDL_KEYDOWN:
                 if (!camera.in_transisition) player.move(event, &camera);
                 if (event.key.keysym.sym == SDLK_e) player.health -= 10;
+                if (event.key.keysym.sym == SDLK_c)
+                    player.stats.active = !player.stats.active;
                 if (event.key.keysym.sym == SDLK_f) {
                     player.inventory.active = !player.inventory.active;
                     player.spells.selected_spell = -1;
@@ -201,6 +205,7 @@ int main(){
 
         player.render(camera, offset, characters_textures);
         player.inventory.render(camera, items_textures);
+        player.stats.render(camera, items_textures, font);
         item_t *hovered_item = player.inventory.slot_hovered(camera, mp);
         if (hovered_item != NULL)
             player.inventory.render_tooltip(camera, items_textures, hovered_item, font, mp);

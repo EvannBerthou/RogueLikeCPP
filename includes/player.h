@@ -9,6 +9,7 @@
 #include "inventory.h"
 #include "vec2.h"
 #include "slot.h"
+#include "stats.h"
 
 typedef struct {
     room_t *in_room;
@@ -20,6 +21,7 @@ typedef struct {
 
     int max_health = 100;
     int health = max_health;
+    stats_t stats = {100,100,50};
     inventory_t inventory = {};
     spells_t spells = {};
 
