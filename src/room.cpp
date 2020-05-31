@@ -24,6 +24,8 @@ void room_t::render (camera_t &camera, int offset){
                          camera.tile_size, camera.tile_size};
         camera.render_texture(chest.texture, &rect);
     }
+
+    for (auto &enemy: this->enemies) enemy.render(camera);
 }
 
 void room_t::update(float dt) {

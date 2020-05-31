@@ -13,6 +13,7 @@
 
 typedef struct {
     room_t *in_room;
+    room_t *prev_room = NULL;
     int x = 7, y = 5;
     double frame_time = 0;
     int frame = 0;

@@ -6,10 +6,9 @@
 #include <vector>
 #include "tile.h"
 #include "world_item.h"
-#include "chest.h"
-struct camera_t;
-typedef struct camera_t camera_t;
+#include "enemy.h"
 #include "camera.h"
+#include "chest.h"
 
 typedef struct room_t {
     int x,y;
@@ -17,6 +16,7 @@ typedef struct room_t {
     std::vector<tile_t> tiles = {};
     std::vector<world_item_t> items = {};
     std::vector<chest_t> chests = {};
+    std::vector<enemy_t> enemies = {};
     SDL_Texture *static_texture = NULL;
 
     bool operator==(const room_t other){
@@ -40,6 +40,12 @@ typedef struct room_t {
     world_item_t *has_item(int x, int y) {
         for (auto &item : items)
             if (item.x == x && item.y == y) return &item;
+        return NULL;
+    }
+
+    enemy_t *enemy_at(int x, int y) {
+        for (auto &enemy : enemies)
+            if (enemy.x == x && enemy.y == y) return &enemy;
         return NULL;
     }
 

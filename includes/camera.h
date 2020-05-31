@@ -3,9 +3,6 @@
 
 #include <SDL2/SDL.h>
 #include "vec2.h"
-struct room_t;
-typedef struct room_t room_t;
-#include "room.h"
 
 typedef struct camera_t {
     float x = -5;
@@ -24,12 +21,9 @@ typedef struct camera_t {
     void rect_room_to_screen(SDL_Rect &rect);
 
     void update(double dt);
-    void begin_transistion(room_t *from, room_t *to);
-    room_t *prev_room = NULL;
-    room_t *current_room = NULL;
+    void begin_transistion(vec2i from, vec2i to);
 
-    float to_x = 0;
-    float to_y = 0;
+    vec2i moving_to = vec2i(0,0);
     vec2 dir = vec2(0,0);
     bool in_transisition = false;
     float transition_distance = 0;

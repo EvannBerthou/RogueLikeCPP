@@ -135,7 +135,6 @@ int main(){
     player.inventory.init_inventory();
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
     camera_t camera(renderer);
-    camera.current_room = player.in_room;
 
     d.rooms.at(0).items.push_back({2,5, items["sword"]});
     d.rooms.at(0).items.push_back({8,2, items["heal"] });
@@ -143,6 +142,7 @@ int main(){
     d.rooms.at(0).items.push_back({4,5, items["wand"] });
     d.rooms.at(1).items.push_back({7,5, items["ds"]   });
     d.rooms.at(0).chests.push_back({3,8, items_textures.get_texture_by_name("chest")});
+    d.rooms.at(0).enemies.push_back({5,8, characters_textures.get_texture_by_name("ennemy")});
 
     auto fps_clock = fps_clock_t();
 
@@ -180,7 +180,7 @@ int main(){
             case SDL_MOUSEBUTTONDOWN:
                 if (!player.inventory.active) {
                     player.spells.select_spell(camera, {player.x, player.y}, mp);
-                    player.spells.cast(mp);
+                    player.spells.cast(mp, player.in_room);
                 }
                 player.consume(player.inventory.slot_hovered(camera, mp));
                 break;
@@ -199,8 +199,8 @@ int main(){
         player.in_room->update(fps_clock.dt);
         player.in_room->render(camera, offset);
         if (camera.in_transisition) {
-            camera.prev_room->update(fps_clock.dt);
-            camera.prev_room->render(camera, offset);
+            player.prev_room->update(fps_clock.dt);
+            player.prev_room->render(camera, offset);
         }
 
         player.render(camera, offset, characters_textures);

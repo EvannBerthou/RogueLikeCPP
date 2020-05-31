@@ -32,4 +32,5 @@ void load_characters_textures(texture_dict &textures, SDL_Renderer *renderer) {
     textures.load_texture(renderer,  "player1",   "assets/images/player1.png");
     textures.load_texture(renderer,  "player2",   "assets/images/player2.png");
     textures.load_texture(renderer,  "player3",   "assets/images/player3.png");
+    textures.load_texture(renderer,  "ennemy",    "assets/images/ennemy.png");
 }
