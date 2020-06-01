@@ -13,6 +13,8 @@
 #include "fonts.h"
 #include "textures.h"
 #include "items_loader.h"
+#include "pathfinding.h"
+#include "enemy.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -41,6 +43,10 @@ typedef struct {
  *      Différents sorts pour attaquer les ennemies
  *
  * Ajouter des ennemies
+ *      IA des ennemies
+ *          A* pathfinding OK
+ *          Cache le chemin et seulement l'actualiser au déplacement du joueur
+ *              au lieu de le calculer chaque frame
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
  *      Ouvrir un menu avec le contenue du coffre lors de la collision
@@ -78,6 +84,7 @@ typedef struct {
  *      Cooldown (tours)
  * Ajouter des stats pour le joueur et les ennemies
  * Interface avec les stats
+ * Ajouter le tour par tour
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
@@ -143,6 +150,8 @@ int main(){
     d.rooms.at(1).items.push_back({7,5, items["ds"]   });
     d.rooms.at(0).chests.push_back({3,8, items_textures.get_texture_by_name("chest")});
     d.rooms.at(0).enemies.push_back({5,8, characters_textures.get_texture_by_name("ennemy")});
+    d.rooms.at(1).enemies.push_back({8,3, characters_textures.get_texture_by_name("ennemy")});
+    d.rooms.at(1).enemies.push_back({5,5, characters_textures.get_texture_by_name("ennemy")});
 
     auto fps_clock = fps_clock_t();
 
@@ -214,6 +223,14 @@ int main(){
 
         //spell bar
         player.spells.render(camera, items_textures, mp);
+
+        for (auto const &e: player.in_room->enemies) {
+            std::vector<vec2i> path = find_path({e.x, e.y}, {player.x, player.y}, player.in_room);
+            for (int i = (int)path.size() - 1; i > 0; --i) {
+                vec2i position = path.at(i);
+                camera.render_texture_to_room(items_textures.get_texture_by_name("selected"), position);
+            }
+        }
 
         SDL_RenderPresent(renderer);
         fps_clock.tick();

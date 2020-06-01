@@ -11,7 +11,6 @@ typedef struct ennemy_t {
     stats_t stats = {100,100,100};
     bool alive = true;
 
-    void render(camera_t &camera);
     void take_damage(int amount);
 } enemy_t;
 

@@ -25,10 +25,22 @@ void room_t::render (camera_t &camera, int offset){
         camera.render_texture(chest.texture, &rect);
     }
 
-    for (auto &enemy: this->enemies) enemy.render(camera);
+    for (auto &enemy: this->enemies) {
+        SDL_Rect rect = {offset_x + center_x + enemy.x * camera.tile_size,
+                         offset_y + center_y + enemy.y * camera.tile_size,
+                         camera.tile_size, camera.tile_size};
+        camera.render_texture(enemy.texture, &rect);
+    }
 }
 
 void room_t::update(float dt) {
     for (auto &item: items)
         item.update(dt);
+    size_t size = enemies.size();
+    for (std::vector<ennemy_t>::size_type i = 0; i < size; i++) {
+        if (!enemies.at(i).alive) {
+            enemies.erase(enemies.begin() + i);
+            size--;
+        }
+    }
 }
