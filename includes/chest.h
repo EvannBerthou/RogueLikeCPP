@@ -3,9 +3,10 @@
 
 #include <SDL2/SDL.h>
 #include "camera.h"
+#include "vec2.h"
 
 typedef struct {
-    int x,y;
+    vec2i pos;
     SDL_Texture *texture;
 
     void render(camera_t &camera);

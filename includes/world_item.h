@@ -3,9 +3,10 @@
 
 #include <cmath>
 #include "item.h"
+#include "vec2.h"
 
 typedef struct {
-    int x,y;
+    vec2i pos;
     item_t item;
     double angle = 0;
 

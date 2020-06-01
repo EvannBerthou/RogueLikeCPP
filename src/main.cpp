@@ -143,15 +143,15 @@ int main(){
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
     camera_t camera(renderer);
 
-    d.rooms.at(0).items.push_back({2,5, items["sword"]});
-    d.rooms.at(0).items.push_back({8,2, items["heal"] });
-    d.rooms.at(0).items.push_back({9,2, items["damage"] });
-    d.rooms.at(0).items.push_back({4,5, items["wand"] });
-    d.rooms.at(1).items.push_back({7,5, items["ds"]   });
-    d.rooms.at(0).chests.push_back({3,8, items_textures.get_texture_by_name("chest")});
-    d.rooms.at(0).enemies.push_back({5,8, characters_textures.get_texture_by_name("ennemy")});
-    d.rooms.at(1).enemies.push_back({8,3, characters_textures.get_texture_by_name("ennemy")});
-    d.rooms.at(1).enemies.push_back({5,5, characters_textures.get_texture_by_name("ennemy")});
+    d.rooms.at(0).items.push_back({{2,5}, items["sword"]});
+    d.rooms.at(0).items.push_back({{8,2}, items["heal"] });
+    d.rooms.at(0).items.push_back({{9,2}, items["damage"] });
+    d.rooms.at(0).items.push_back({{4,5}, items["wand"] });
+    d.rooms.at(1).items.push_back({{7,5}, items["ds"]   });
+    d.rooms.at(0).chests.push_back({{3,8}, items_textures.get_texture_by_name("chest")});
+    d.rooms.at(0).enemies.push_back({{5,8}, characters_textures.get_texture_by_name("ennemy")});
+    d.rooms.at(1).enemies.push_back({{8,3}, characters_textures.get_texture_by_name("ennemy")});
+    d.rooms.at(1).enemies.push_back({{5,5}, characters_textures.get_texture_by_name("ennemy")});
 
     auto fps_clock = fps_clock_t();
 
@@ -188,7 +188,7 @@ int main(){
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (!player.inventory.active) {
-                    player.spells.select_spell(camera, {player.x, player.y}, mp);
+                    player.spells.select_spell(camera, player.pos, mp);
                     player.spells.cast(mp, player.in_room);
                 }
                 player.consume(player.inventory.slot_hovered(camera, mp));
@@ -201,8 +201,8 @@ int main(){
 
         //Center camera on the room where the player is
         if (!camera.in_transisition){
-            camera.x = player.in_room->x * (15 * camera.tile_size + offset) - 25;
-            camera.y = player.in_room->y * (11 * camera.tile_size + offset) - 25;
+            camera.x = player.in_room->pos.x * (15 * camera.tile_size + offset) - 25;
+            camera.y = player.in_room->pos.y * (11 * camera.tile_size + offset) - 25;
         }
 
         player.in_room->update(fps_clock.dt);
@@ -225,7 +225,7 @@ int main(){
         player.spells.render(camera, items_textures, mp);
 
         for (auto const &e: player.in_room->enemies) {
-            std::vector<vec2i> path = find_path({e.x, e.y}, {player.x, player.y}, player.in_room);
+            std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
             for (int i = (int)path.size() - 1; i > 0; --i) {
                 vec2i position = path.at(i);
                 camera.render_texture_to_room(items_textures.get_texture_by_name("selected"), position);

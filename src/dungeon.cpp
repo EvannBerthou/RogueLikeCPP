@@ -8,33 +8,27 @@
 #include "dungeon.h"
 #include "room.h"
 
-bool get_new_room(std::vector<room_t> &rooms){
-    room_t *random_room = &rooms.at(rand() % rooms.size());
-    int side = rand()%4;
-    if (random_room->doors[side] != NULL) return false;
-
-    auto new_room_pos = get_new_pos(random_room->x, random_room->y, side);
-    room_t new_room = {new_room_pos.first, new_room_pos.second};
-    if (room_exists(rooms, new_room)) return false;
-    rooms.push_back(new_room);
-
-    room_t *last_room = &rooms.back();
-    random_room->doors[side] = last_room;
-    last_room->doors[get_opposite_side(side)] = random_room;
-    return true;
-}
-
-std::pair<int,int> get_door_pos(int side){
-    switch (side){
-    case 0: return std::make_pair(7,0);
-    case 1: return std::make_pair(14,5);
-    case 2: return std::make_pair(7,10);
-    case 3: return std::make_pair(0,5);
+static vec2i get_new_pos(vec2i pos, int dir){
+    switch  (dir){
+    case  0: return  vec2i(pos.x,   pos.y-1);
+    case  1: return  vec2i(pos.x+1, pos.y);
+    case  2: return  vec2i(pos.x,   pos.y+1);
+    case  3: return  vec2i(pos.x-1, pos.y);
     }
-    return std::make_pair(-1,-1);
+    return vec2i(0,0);
 }
 
-int get_opposite_side(int side){
+static vec2i get_door_pos(int side){
+    switch (side){
+    case 0: return vec2i(7,0);
+    case 1: return vec2i(14,5);
+    case 2: return vec2i(7,10);
+    case 3: return vec2i(0,5);
+    }
+    return vec2i(0,0);
+}
+
+static int get_opposite_side(int side){
     if (side == 0) return 2;
     if (side == 1) return 3;
     if (side == 2) return 0;
@@ -42,14 +36,20 @@ int get_opposite_side(int side){
     return -1;
 }
 
-std::pair<int,int> get_new_pos(int x, int y, int dir){
-    switch (dir){
-    case 0: return std::make_pair(x,y-1);
-    case 1: return std::make_pair(x+1,y);
-    case 2: return std::make_pair(x,y+1);
-    case 3: return std::make_pair(x-1,y);
-    }
-    return std::make_pair(-1,-1);
+bool get_new_room(std::vector<room_t> &rooms){
+    room_t *random_room = &rooms.at(rand() % rooms.size());
+    int side = rand()%4;
+    if (random_room->doors[side] != NULL) return false;
+
+    auto new_room_pos = get_new_pos(random_room->pos, side);
+    room_t new_room = {new_room_pos};
+    if (room_exists(rooms, new_room)) return false;
+    rooms.push_back(new_room);
+
+    room_t *last_room = &rooms.back();
+    random_room->doors[side] = last_room;
+    last_room->doors[get_opposite_side(side)] = random_room;
+    return true;
 }
 
 bool room_exists(std::vector<room_t> &rooms, room_t &room){
@@ -67,12 +67,12 @@ dungeon_t generate_dungeon(int seed, int n_w, int n_h, int number_of_rooms) {
         exit(1);
     }
 
-    d.rooms.push_back({0,0});
+    d.rooms.push_back({{0,0}});
     room_t first_room = d.rooms.at(0);
 
     int dir = rand()%4;
-    auto second_room_pos = get_new_pos(first_room.x, first_room.y, dir);
-    d.rooms.push_back({second_room_pos.first, second_room_pos.second});
+    auto second_room_pos = get_new_pos(first_room.pos, dir);
+    d.rooms.push_back({second_room_pos});
 
     d.rooms.at(0).doors[dir] = &d.rooms.at(1);
     d.rooms.at(1).doors[get_opposite_side(dir)] = &d.rooms.at(0);
@@ -134,9 +134,9 @@ void generate_tiles(dungeon_t *d, texture_dict &textures, SDL_Renderer *renderer
             if (room.doors.at(i) != NULL){
                 auto door_pos = get_door_pos(i);
                 SDL_Texture *text = get_door_texture(textures, i);
-                SDL_Rect position = {door_pos.first * 50, door_pos.second * 50, 50,50};
+                SDL_Rect position = {door_pos.x * 50, door_pos.y * 50, 50,50};
                 SDL_RenderCopy(renderer, text, NULL, &position);
-                room.set_tile_at_xy(door_pos.first, door_pos.second, {false,true});
+                room.set_tile_at_xy(door_pos.x, door_pos.y, {false,true});
             }
         }
         room.static_texture = static_texture;

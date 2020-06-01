@@ -22,12 +22,12 @@ void spells_t::select_spell(camera_t &camera, vec2i pp, vec2i mp) {
 
 void spells_t::cast(vec2i mp, room_t *room) {
     if (selected_spell == -1) return;
-    auto hovered = spells.at(selected_spell).get_hovered(mp);
+    vec2i *hovered = spells.at(selected_spell).get_hovered(mp);
     if (hovered == NULL)
         std::cout << "outside of range" << std::endl;
     else {
-        std::cout << "casting to : " << hovered->first << " " << hovered->second << std::endl;
-        enemy_t *enemy = room->enemy_at(hovered->first, hovered->second);
+        std::cout << "casting to : " << hovered->x << " " << hovered->y << std::endl;
+        enemy_t *enemy = room->enemy_at(*hovered);
         if (enemy != NULL) {
             enemy->take_damage(100);
         }

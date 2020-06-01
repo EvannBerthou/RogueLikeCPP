@@ -18,7 +18,7 @@ std::vector<vec2i> find_path(vec2i start, vec2i goal, room_t *room) {
             nodes[index].parent = nullptr;
             nodes[index].global_f_cost = INFINITY;
             nodes[index].local_f_cost = INFINITY;
-            nodes[index].obstacle = room->has_chest(i,j) || room->has_item(i,j);
+            nodes[index].obstacle = room->has_chest({i,j}) || room->has_item({i,j});
         }
     }
 

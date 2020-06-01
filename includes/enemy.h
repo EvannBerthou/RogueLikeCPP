@@ -4,9 +4,10 @@
 #include <SDL2/SDL.h>
 #include "camera.h"
 #include "stats.h"
+#include "vec2.h"
 
 typedef struct ennemy_t {
-    int x,y;
+    vec2i pos;
     SDL_Texture *texture;
     stats_t stats = {100,100,100};
     bool alive = true;
