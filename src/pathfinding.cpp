@@ -68,71 +68,11 @@ std::vector<vec2i> find_path(vec2i start, vec2i goal, room_t *room) {
         }
     }
     std::vector<vec2i> path = {};
-    path.push_back({start_node->x, start_node->y});
     node_t *p = end_node;
     while (p->parent != nullptr) {
         path.push_back({p->x, p->y});
         p = p->parent;
     }
-    path.push_back({start_node->x, start_node->y});
     delete []nodes;
     return path;
 }
-
-//std::vector<vec2i> find_path_old(vec2i start, vec2i goal, room_t *room) {
-    //node_t start_node = { start.x, start.y, NULL, 0,0,0};
-    //node_t end_node   = { goal.x,  goal.y,  NULL, 0,0,0};
-
-    //std::vector<node_t> open_list   = {};
-    //std::vector<node_t> closed_list = {};
-
-    //open_list.push_back(start_node);
-
-    //while (open_list.size() > 0) {
-        //node_t &current = open_list.at(0);
-        //int current_index = 0;
-        //for (int i = 0; i < (int)open_list.size(); ++i){
-            //node_t &node = open_list.at(i);
-            //if (node.f_cost < current.f_cost) {
-                //current = node;
-                //current_index = i;
-            //}
-        //}
-
-        //open_list.erase(open_list.begin() + current_index);
-        //closed_list.push_back(current);
-
-        //if (current.x == end_node.x && current.y == end_node.y) {
-            //std::vector<vec2i> path = {};
-            //return path;
-        //}
-
-        //std::vector<node_t> children = {};
-        //for (int i = -1; i <= 1; ++i) {
-            //for (int j = -1; j <= 1; ++j) {
-                //if (i == 0 && j == 0) continue;
-                //vec2i new_position = {current.x + i, current.y + j};
-                //if (new_position.x > 15 || new_position.x < 0
-                        //|| new_position.y > 11 || new_position.y < 0)
-                    //continue;
-                //node_t new_node = {new_position.x, new_position.y, &current, 0,0,0};
-                //children.push_back(new_node);
-            //}
-        //}
-
-        //for (auto &child: children) {
-            //for (auto &c: closed_list)
-                //if (child.x == c.x && child.y == c.y) continue;
-
-            //child.g_cost = current.g_cost + 1;
-            //child.h_cost = distance(child.x, child.y, end_node.x, end_node.y);
-            //child.f_cost = child.g_cost + child.h_cost;
-
-            //for (auto &c: open_list) {
-                //if (child.x == c.x && child.y == c.y && c.g_cost < child.g_cost) continue;
-            //}
-            //open_list.push_back(child);
-        //}
-    //}
-    //return {};
-//}

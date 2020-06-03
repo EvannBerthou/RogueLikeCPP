@@ -24,6 +24,10 @@ struct vector {
         return other.x == x && other.y == y;
     }
 
+    bool operator!=(const vector &other) const {
+        return !(other.x == x && other.y == y);
+    }
+
     vector<T> operator+(const vector<T> &other) const {
         return {other.x + x, other.y + y};
     }

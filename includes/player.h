@@ -27,7 +27,7 @@ typedef struct {
     spells_t spells = {};
 
     void update(double dt);
-    void move(SDL_Event event, camera_t *camera);
+    bool move(SDL_Event event, camera_t *camera);
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
     void consume(vec2i mouse_position);
     void consume(item_t *item);

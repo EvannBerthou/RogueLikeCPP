@@ -28,24 +28,31 @@ vec2i get_next_tile_pos(int dir, vec2i pos) {
     return vec2i(x,y);
 }
 
-void player_t::move(SDL_Event event, camera_t *camera) {
-    if (inventory.active) return;
+bool player_t::move(SDL_Event event, camera_t *camera) {
+    if (inventory.active) return false;
     if (event.key.keysym.sym == SDLK_q) facing_left = true;
     if (event.key.keysym.sym == SDLK_d) facing_left = false;
     vec2i next_pos = get_next_tile_pos(get_direction_from_keycode(event.key.keysym.sym),pos);
     if (in_room->has_chest(next_pos)) {
         std::cout << "chest" << std::endl;
-        return;
+        return false;
     }
 
     world_item_t *item_on_ground = in_room->has_item(next_pos);
+    bool return_value = false;
     if (item_on_ground != NULL) {
         inventory.add_item(&item_on_ground->item);
         in_room->remove_item(item_on_ground);
     }
 
-    if (!in_room->get_tile_at_xy(next_pos)->blocking)
+    if (in_room->enemy_at(next_pos) != NULL) {
+        return false;
+    }
+
+    if (next_pos != pos && !in_room->get_tile_at_xy(next_pos)->blocking) {
         pos = next_pos;
+        return_value = true;
+    }
 
     if (in_room->get_tile_at_xy(pos)->door){
         int dir = get_direction_from_keycode(event.key.keysym.sym);
@@ -66,6 +73,7 @@ void player_t::move(SDL_Event event, camera_t *camera) {
     }
     if (spells.selected_spell != -1)
         spells.spells.at(spells.selected_spell).set_spell_zone(pos);
+    return return_value;
 }
 
 void player_t::render(camera_t &camera, int offset, texture_dict &characters_textures) {

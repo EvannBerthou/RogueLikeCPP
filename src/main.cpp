@@ -177,7 +177,16 @@ int main(){
                 running = 0;
                 break;
             case SDL_KEYDOWN:
-                if (!camera.in_transisition) player.move(event, &camera);
+                if (!camera.in_transisition) {
+                    if (player.move(event, &camera)) {
+                        for (auto &e: player.in_room->enemies) {
+                            std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
+                            vec2i pos = path.back();
+                            if (pos != player.pos && player.in_room->enemy_at(pos) == NULL)
+                                e.pos = pos;
+                        }
+                    }
+                }
                 if (event.key.keysym.sym == SDLK_e) player.health -= 10;
                 if (event.key.keysym.sym == SDLK_c)
                     player.stats.active = !player.stats.active;
@@ -223,14 +232,6 @@ int main(){
 
         //spell bar
         player.spells.render(camera, items_textures, mp);
-
-        for (auto const &e: player.in_room->enemies) {
-            std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
-            for (int i = (int)path.size() - 1; i > 0; --i) {
-                vec2i position = path.at(i);
-                camera.render_texture_to_room(items_textures.get_texture_by_name("selected"), position);
-            }
-        }
 
         SDL_RenderPresent(renderer);
         fps_clock.tick();
