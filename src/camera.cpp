@@ -2,10 +2,6 @@
 #include "camera.h"
 #include "vec2.h"
 
-camera_t::camera_t(SDL_Renderer *r){
-    renderer = r;
-}
-
 void camera_t::update(double dt){
     if (in_transisition){
         if (transition_time < transition_distance){

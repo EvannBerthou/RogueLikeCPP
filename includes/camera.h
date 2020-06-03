@@ -5,13 +5,12 @@
 #include "vec2.h"
 
 typedef struct camera_t {
+    SDL_Renderer *renderer;
     float x = -5;
     float y = -5;
     int w = 0, h = 0;
     int tile_size = 50;
-    SDL_Renderer *renderer;
 
-    camera_t(SDL_Renderer *r);
     void render_fill_rect_static(SDL_Color color, SDL_Rect *rect);
     void render_fill_rect(SDL_Color color, SDL_Rect *rect);
     void render_texture(SDL_Texture *texture, SDL_Rect *rect, bool flip = false);
