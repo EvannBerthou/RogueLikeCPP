@@ -20,9 +20,9 @@ void spells_t::select_spell(camera_t &camera, vec2i pp, vec2i mp) {
     }
 }
 
-void spells_t::cast(vec2i mp, room_t *room) {
+void spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
     if (selected_spell == -1) return;
-    vec2i *hovered = spells.at(selected_spell).get_hovered(mp);
+    vec2i *hovered = spells.at(selected_spell).get_hovered(camera, mp);
     if (hovered == NULL)
         std::cout << "outside of range" << std::endl;
     else {

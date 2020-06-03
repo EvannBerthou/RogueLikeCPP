@@ -15,9 +15,11 @@ static bool is_hovered(SDL_Rect &rect, vec2i mp) {
     return (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h);
 }
 
-vec2i* spell_t::get_hovered(vec2i mp) {
+vec2i* spell_t::get_hovered(camera_t &camera, vec2i mp) {
+    int offset_x = (camera.w - (15 * 50)) / 2;
+    int offset_y = (camera.h - (11 * 50)) / 2;
     for (auto &tile: spell_zone) {
-        SDL_Rect rect = {tile.x * 50 + 25, tile.y * 50 + 25, 50,50};
+        SDL_Rect rect = {tile.x * 50 + offset_x, tile.y * 50 + offset_y, 50,50};
         if (is_hovered(rect, mp)) return &tile;
     }
     return NULL;

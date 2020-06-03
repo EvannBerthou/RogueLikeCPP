@@ -211,7 +211,7 @@ int main(){
             case SDL_MOUSEBUTTONDOWN:
                 if (!player.inventory.active) {
                     player.spells.select_spell(camera, player.pos, mp);
-                    player.spells.cast(mp, player.in_room);
+                    player.spells.cast(camera, mp, player.in_room);
                 }
                 player.consume(player.inventory.slot_hovered(camera, mp));
                 break;
