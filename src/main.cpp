@@ -85,6 +85,10 @@ typedef struct {
  * Ajouter des stats pour le joueur et les ennemies
  * Interface avec les stats
  * Ajouter le tour par tour
+ *      Les enenemies suivent le joueur OK
+ *      Les ennemies infligent des dégats au joueur
+ *
+ * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
@@ -182,12 +186,21 @@ int main(){
                         for (auto &e: player.in_room->enemies) {
                             std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
                             vec2i pos = path.back();
-                            if (pos != player.pos && player.in_room->enemy_at(pos) == NULL)
+                            if (pos != player.pos && player.in_room->enemy_at(pos) == NULL) {
                                 e.pos = pos;
+                                if (distance(e.pos, player.pos) < 2.0) {
+                                    if (e.battle_started)
+                                        player.take_damage(e.stats.strength);
+                                    else e.battle_started = true;
+                                }
+                            }
+                            else {
+                                player.take_damage(e.stats.strength);
+                            }
                         }
                     }
                 }
-                if (event.key.keysym.sym == SDLK_e) player.health -= 10;
+                if (event.key.keysym.sym == SDLK_e) player.stats.health -= 10;
                 if (event.key.keysym.sym == SDLK_c)
                     player.stats.active = !player.stats.active;
                 if (event.key.keysym.sym == SDLK_f) {
@@ -227,7 +240,7 @@ int main(){
         item_t *hovered_item = player.inventory.slot_hovered(camera, mp);
         if (hovered_item != NULL)
             player.inventory.render_tooltip(camera, items_textures, hovered_item, font, mp);
-        render_text(renderer, font, std::to_string(player.health).c_str(),{55,5}, {255,255,0,255});
+        render_text(renderer, font, std::to_string(player.stats.health).c_str(),{55,5}, {255,255,0,255});
 
 
         //spell bar

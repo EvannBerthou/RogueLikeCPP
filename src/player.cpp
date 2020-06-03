@@ -89,7 +89,7 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
     camera.render_texture(characters_textures.get_texture_by_name(texture_to_load),
                           &player_rect, this->facing_left);
 
-    SDL_Rect health_rect = {5,5, (int)(this->health * 1.5), 30};
+    SDL_Rect health_rect = {5,5, (int)(stats.health * 1.5), 30};
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);
 
 }
@@ -100,9 +100,24 @@ void player_t::consume(item_t *item) {
 
     if (item->type == ItemType::Effect){
         if (item->effect == ItemEffect::Heal)
-            health += item->amount;
+            regen_health(item->amount);
         if (item->effect == ItemEffect::Damage)
-            health -= item->amount;
+            take_damage(item->amount);
         inventory.remove_item(item);
     }
+}
+
+
+void player_t::take_damage(int amount) {
+    stats.health -= amount;
+    if (stats.health <= 0) {
+        stats.alive = false;
+        stats.health = 0;
+        std::cout << "game over" << std::endl;
+    }
+}
+
+void player_t::regen_health(int amount) {
+    stats.health += amount;
+    if (stats.health > stats.max_health) stats.health = stats.max_health;
 }

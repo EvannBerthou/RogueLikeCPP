@@ -9,8 +9,8 @@
 typedef struct ennemy_t {
     vec2i pos;
     SDL_Texture *texture;
-    stats_t stats = {100,100,100};
-    bool alive = true;
+    stats_t stats = {100,100,10};
+    bool battle_started = false;
 
     void take_damage(int amount);
 } enemy_t;

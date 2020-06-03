@@ -33,6 +33,13 @@ struct vector {
     }
 };
 
+template <typename T>
+float distance(const vector<T> &v1, vector<T> &v2) {
+    float x = (v2.x - v1.x);
+    float y = (v2.y - v1.y);
+    return sqrt(x*x + y*y);
+}
+
 using vec2 = vector<float>;
 using vec2i = vector<int>;
 

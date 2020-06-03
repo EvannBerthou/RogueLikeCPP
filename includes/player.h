@@ -20,8 +20,6 @@ typedef struct {
     int frame_count = 4;
     bool facing_left = true;
 
-    int max_health = 100;
-    int health = max_health;
     stats_t stats = {100,100,50};
     inventory_t inventory = {};
     spells_t spells = {};
@@ -31,6 +29,9 @@ typedef struct {
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
     void consume(vec2i mouse_position);
     void consume(item_t *item);
+
+    void take_damage  (int amount);
+    void regen_health (int amount);
 } player_t;
 
 #endif

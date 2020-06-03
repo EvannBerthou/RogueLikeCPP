@@ -38,7 +38,7 @@ void room_t::update(float dt) {
         item.update(dt);
     size_t size = enemies.size();
     for (std::vector<ennemy_t>::size_type i = 0; i < size; i++) {
-        if (!enemies.at(i).alive) {
+        if (!enemies.at(i).stats.alive) {
             enemies.erase(enemies.begin() + i);
             size--;
         }

@@ -14,6 +14,7 @@ typedef struct {
     int max_health;
     int strength;
 
+    bool alive = true;
     bool active = false;
 
     void render(camera_t &camera, texture_dict &texture, TTF_Font *font);
