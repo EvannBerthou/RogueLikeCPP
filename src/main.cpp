@@ -56,7 +56,7 @@
  * Ajouter le tour par tour
  *      Les enenemies suivent le joueur OK
  *      Les ennemies infligent des dégats au joueur OK
- * Afficher la vie des enemies quand on clique dessus
+ * Afficher la vie des enemies OK
  *
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *

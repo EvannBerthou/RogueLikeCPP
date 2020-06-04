@@ -93,7 +93,8 @@ void game_t::run() {
             case SDL_MOUSEBUTTONDOWN:
                 if (!player.inventory.active) {
                     player.spells.select_spell(camera, player.pos, mouse_position);
-                    player.spells.cast(camera, mouse_position, player.in_room);
+                    if (player.spells.cast(camera, mouse_position, player.in_room))
+                        new_turn();
                 }
                 player.consume(player.inventory.slot_hovered(camera, mouse_position));
                 break;
@@ -106,22 +107,8 @@ void game_t::run() {
 
 void game_t::key_press(SDL_Event &event) {
     if (!camera.in_transisition) {
-        if (player.move(event, &camera)) {
-            for (auto &e: player.in_room->enemies) {
-                std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
-                vec2i pos = path.back();
-                if (pos != player.pos && player.in_room->enemy_at(pos) == NULL) {
-                    e.pos = pos;
-                    if (distance(e.pos, player.pos) < 2.0) {
-                        if (e.battle_started) player.take_damage(e.stats.strength);
-                        else e.battle_started = true;
-                    }
-                }
-                else {
-                    player.take_damage(e.stats.strength);
-                }
-            }
-        }
+        if (player.move(event, &camera))
+            new_turn();
     }
     if (event.key.keysym.sym == SDLK_e) player.stats.health -= 10;
 
@@ -172,6 +159,23 @@ void game_t::render() {
     SDL_Delay(1);
 }
 
+void game_t::new_turn() {
+    turn_count++;
+    std::cout << "starting turn : " << turn_count << std::endl;
+    for (auto &e: player.in_room->enemies) {
+        if (!e.stats.alive) continue;
+        std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
+        vec2i pos = path.back();
+
+        if (pos != player.pos && player.in_room->enemy_at(pos) == NULL)
+            e.pos = pos;
+
+        if (distance(e.pos, player.pos) < 2.0) {
+            if (e.battle_started) player.take_damage(e.stats.strength);
+            else e.battle_started = true;
+        }
+    }
+}
 
 void game_t::exit() {
     dungeon.free();

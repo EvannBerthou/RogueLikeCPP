@@ -41,10 +41,12 @@ typedef struct game_t {
     SDL_Window *window = NULL;
     int offset = 100;
     vec2i mouse_position = {0,0};
+    int turn_count = 0;
 
     void key_press(SDL_Event &event);
     void update();
     void render();
+    void new_turn();
 
     int init();
     void run();

@@ -20,8 +20,8 @@ void spells_t::select_spell(camera_t &camera, vec2i pp, vec2i mp) {
     }
 }
 
-void spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
-    if (selected_spell == -1) return;
+bool spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
+    if (selected_spell == -1) return false;
     vec2i *hovered = spells.at(selected_spell).get_hovered(camera, mp);
     if (hovered == NULL)
         std::cout << "outside of range" << std::endl;
@@ -30,8 +30,10 @@ void spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
         enemy_t *enemy = room->enemy_at(*hovered);
         if (enemy != NULL) {
             enemy->take_damage(spells.at(selected_spell).damage);
+            return true;
         }
     }
+    return false;
 }
 
 void spells_t::render(camera_t &camera, texture_dict &textures, vec2i mp) {
