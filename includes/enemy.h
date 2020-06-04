@@ -6,13 +6,14 @@
 #include "stats.h"
 #include "vec2.h"
 
-typedef struct ennemy_t {
+typedef struct enemy_t {
     vec2i pos;
     SDL_Texture *texture;
     stats_t stats = {100,100,10};
     bool battle_started = false;
 
     void take_damage(int amount);
+    void render(camera_t &camera, vec2i offset);
 } enemy_t;
 
 #endif

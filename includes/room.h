@@ -6,10 +6,10 @@
 #include <vector>
 #include "tile.h"
 #include "world_item.h"
-#include "enemy.h"
 #include "camera.h"
 #include "chest.h"
 #include "vec2.h"
+#include "enemy.h"
 
 typedef struct room_t {
     vec2i pos;

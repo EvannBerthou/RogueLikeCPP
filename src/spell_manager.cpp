@@ -29,7 +29,7 @@ void spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
         std::cout << "casting to : " << hovered->x << " " << hovered->y << std::endl;
         enemy_t *enemy = room->enemy_at(*hovered);
         if (enemy != NULL) {
-            enemy->take_damage(100);
+            enemy->take_damage(spells.at(selected_spell).damage);
         }
     }
 }

@@ -63,6 +63,13 @@ void camera_t::rect_room_to_screen(SDL_Rect &rect) {
     rect.y = rect.y * tile_size + center_y;
 }
 
+vec2i camera_t::vec2_screen_to_room(vec2i vec) {
+    vec2i result(0,0);
+    result.x = (vec.x - (w / 2 - (15*tile_size) / 2)) / tile_size;
+    result.y = (vec.y - (h / 2 - (11*tile_size) / 2)) / tile_size;
+    return result;
+}
+
 void camera_t::render_texture_to_room(SDL_Texture *texture, vec2i position, bool flip) {
     if (texture == NULL) {
         std::cout << "no texture" << std::endl;

@@ -18,6 +18,7 @@ typedef struct camera_t {
     void render_texture_to_room(SDL_Texture *texture, vec2i position, bool flip = false);
 
     void rect_room_to_screen(SDL_Rect &rect);
+    vec2i vec2_screen_to_room(vec2i vec);
 
     void update(double dt);
     void begin_transistion(vec2i from, vec2i to);

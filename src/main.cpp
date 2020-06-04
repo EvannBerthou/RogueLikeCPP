@@ -11,8 +11,6 @@
  * Ajouter des ennemies
  *      IA des ennemies
  *          A* pathfinding OK
- *          Cache le chemin et seulement l'actualiser au déplacement du joueur
- *              au lieu de le calculer chaque frame
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
  *      Ouvrir un menu avec le contenue du coffre lors de la collision
@@ -49,10 +47,16 @@
  *      Raccourcis clavier pour choisir le sort
  *      Cooldown (tours)
  * Ajouter des stats pour le joueur et les ennemies
- * Interface avec les stats
+ *      Vie (up par des bagues)
+ *      Force (up par l'épée)
+ *      Magie (up par le baton)
+ *      Défense (up par l'armure, down l'agilité)
+ *      Agilité (up par une armure légère) -> chance que les enemies ne se déplacent pas pendant un tour
+ * Interface avec les stats OK
  * Ajouter le tour par tour
  *      Les enenemies suivent le joueur OK
- *      Les ennemies infligent des dégats au joueur
+ *      Les ennemies infligent des dégats au joueur OK
+ * Afficher la vie des enemies quand on clique dessus
  *
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
