@@ -9,7 +9,7 @@
 #include "room.h"
 
 typedef struct {
-    std::vector<spell_t> spells = {{}};
+    std::vector<spell_t> spells = {{2,50,false}, {2,50,true}, {3,50, false}, {3,50,true}};
     void select_spell(camera_t &camera, vec2i player_position, vec2i mouse_position);
     void render(camera_t &camera, texture_dict &textures, vec2i mouse_position);
     bool cast(camera_t &camera, vec2i mouse_position, room_t *room);

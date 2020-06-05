@@ -52,6 +52,9 @@ int game_t::init() {
     player = {&dungeon.rooms[0]};
     player.inventory.init_inventory();
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(1).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(2).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(3).texture = items_textures.get_texture_by_name("wand");
     camera = { renderer };
 
     dungeon.rooms.at(0).items.push_back({{2,5}, items["sword"]});

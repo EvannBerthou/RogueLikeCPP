@@ -31,8 +31,19 @@ void spell_t::set_spell_zone(vec2i pp) {
         for (int j = 0; j < radius; ++j) {
             auto offset = get_pos(i,j);
             vec2i pos = pp + offset;
-            if (pos.x == 0 || pos.x == 14 || pos.y == 0 || pos.y == 10) continue;
+            if (pos.x <= 0 || pos.x >= 14 || pos.y <= 0 || pos.y >= 10) continue;
             spell_zone.push_back(pos);
+        }
+    }
+
+    if (diagonal) {
+        for (int i = -1; i <= 1; ++i) {
+            for (int j = -1; j <= 1; ++j) {
+                if (i == 0 && j == 0) continue;
+                vec2i pos = pp + vec2i(i,j);
+                if (pos.x <= 0 || pos.x >= 14 || pos.y <= 0 || pos.y >= 10) continue;
+                spell_zone.push_back(pos);
+            }
         }
     }
 }

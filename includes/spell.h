@@ -9,8 +9,9 @@
 #include "vec2.h"
 
 typedef struct {
-    int radius = 2;
-    int damage = 50;
+    int radius;
+    int damage;
+    bool diagonal;
 
     SDL_Texture *texture = NULL;
 

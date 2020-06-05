@@ -40,7 +40,7 @@
  * Ajouter un chat de log des combats/objects, argent obtenues
  * Ajouter des décorations aux salles
  * Sorts:
- *      Inclure les diagonales dans les zones
+ *      Inclure les diagonales dans les zones OK
  *      Différent type de zone:
  *          Cercle, ligne, éloignés du joueur
  *      Détecter quelle case est cliquée dans la zone OK
@@ -63,7 +63,7 @@
  * Ajouter des effets
  *      Animation lors d'un sort
  *          Shake quand l'ennemie se toucher
- *      Shake quand le joueur prend des dégats
+ *      Shake quand le joueur prend des dégats OK
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
