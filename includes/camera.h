@@ -22,12 +22,17 @@ typedef struct camera_t {
 
     void update(double dt);
     void begin_transistion(vec2i from, vec2i to);
+    void begin_shake();
 
     vec2i moving_to = vec2i(0,0);
     vec2 dir = vec2(0,0);
     bool in_transisition = false;
     float transition_distance = 0;
     float transition_time = 0;
+
+    bool shaking = false;
+    vec2i original = vec2i(0,0);
+    float elapsed = 0.0f;
 
 } camera_t;
 

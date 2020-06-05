@@ -60,6 +60,11 @@
  *
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
+ * Ajouter des effets
+ *      Animation lors d'un sort
+ *          Shake quand l'ennemie se toucher
+ *      Shake quand le joueur prend des dégats
+ *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * Meilleur parsing des items

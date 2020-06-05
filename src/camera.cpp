@@ -15,6 +15,23 @@ void camera_t::update(double dt){
             in_transisition = false;
         }
     }
+
+    if (shaking) {
+        float shake_x = (float)(rand() % 3 - 1) * 5;
+        float shake_y = (float)(rand() % 3 - 1) * 5;
+
+        x = original.x + shake_x;
+        y = original.y + shake_y;
+
+        elapsed += dt;
+
+        if (elapsed > 150.f) {
+            x = original.x;
+            y = original.y;
+            elapsed = 0.0f;
+            shaking = false;
+        }
+    }
 }
 
 void camera_t::render_fill_rect_static(SDL_Color color, SDL_Rect *rect){
@@ -78,4 +95,9 @@ void camera_t::render_texture_to_room(SDL_Texture *texture, vec2i position, bool
     SDL_Rect rect = {position.x, position.y, tile_size, tile_size};
     rect_room_to_screen(rect);
     render_texture_static(texture, &rect, flip);
+}
+
+void camera_t::begin_shake() {
+    original = vec2i(x,y);
+    shaking = true;
 }

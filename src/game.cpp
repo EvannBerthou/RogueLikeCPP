@@ -126,7 +126,7 @@ void game_t::update() {
     player.update(fps_clock.dt);
 
     //Center camera on the room where the player is
-    if (!camera.in_transisition){
+    if (!camera.in_transisition && !camera.shaking){
         camera.x = player.in_room->pos.x * (15 * camera.tile_size + offset) - 25;
         camera.y = player.in_room->pos.y * (11 * camera.tile_size + offset) - 25;
     }
@@ -171,7 +171,10 @@ void game_t::new_turn() {
             e.pos = pos;
 
         if (distance(e.pos, player.pos) < 2.0) {
-            if (e.battle_started) player.take_damage(e.stats.strength);
+            if (e.battle_started) {
+                camera.begin_shake();
+                player.take_damage(e.stats.strength);
+            }
             else e.battle_started = true;
         }
     }
