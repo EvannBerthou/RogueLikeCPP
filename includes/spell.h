@@ -12,6 +12,8 @@ typedef struct {
     int radius;
     int damage;
     bool diagonal;
+    int cooldown = 3;
+    int remaining_cooldown = 0;
 
     SDL_Texture *texture = NULL;
 

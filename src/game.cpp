@@ -155,7 +155,7 @@ void game_t::render() {
 
 
     //spell bar
-    player.spells.render(camera, items_textures, mouse_position);
+    player.spells.render(camera, items_textures, mouse_position, font);
 
     SDL_RenderPresent(camera.renderer);
     fps_clock.tick();
@@ -180,6 +180,11 @@ void game_t::new_turn() {
             }
             else e.battle_started = true;
         }
+    }
+
+    for (spell_t &spell: player.spells.spells) {
+        if (spell.remaining_cooldown > 0)
+            spell.remaining_cooldown -= 1;
     }
 }
 
