@@ -45,7 +45,7 @@
  *          Cercle, ligne, éloignés du joueur
  *      Détecter quelle case est cliquée dans la zone OK
  *      Raccourcis clavier pour choisir le sort
- *      Cooldown (tours)
+ *      Cooldown (tours) OK
  * Ajouter des stats pour le joueur et les ennemies
  *      Vie (up par des bagues)
  *      Force (up par l'épée)

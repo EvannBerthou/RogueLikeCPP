@@ -122,6 +122,22 @@ void game_t::key_press(SDL_Event &event) {
         player.inventory.active = !player.inventory.active;
         player.spells.selected_spell = -1;
     }
+
+    const char* name = SDL_GetKeyName(event.key.keysym.sym);
+    if (name[0] > '0' && name[1] < '9') {
+        int index = name[0] - '0' - 1;
+        if (index < (int)player.spells.spells.size()) {
+            spell_t &spell = player.spells.spells.at(index);
+            if (index == player.spells.selected_spell) {
+                player.spells.selected_spell = -1;
+            }
+            else if (spell.remaining_cooldown == 0) {
+                player.spells.selected_spell = index;
+                player.spells.spells.at(player.spells.selected_spell).set_spell_zone(player.pos);
+            }
+        }
+    }
+
 }
 
 void game_t::update() {
