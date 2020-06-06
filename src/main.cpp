@@ -55,7 +55,7 @@
  *      Les enenemies suivent le joueur OK
  *      Les ennemies infligent des dégats au joueur OK
  * Afficher la vie des enemies OK
- * Ajouter des dégats au corps à corps *
+ * Ajouter des dégats au corps à corps
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
  * Ajouter des effets
