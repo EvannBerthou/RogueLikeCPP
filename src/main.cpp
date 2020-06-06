@@ -25,10 +25,10 @@
  *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
  *          Consommer OK
  *          Répartir les effets dans différentes fonctions
- *      Clique droit pour drop les items par terre
+ *      Clique droit pour drop les items par terre OK
  * Ajouter sorts
  *      Dégats de zone
- *      Dégats ciblés
+ *      Dégats ciblés OK
  *      Status, soins
  * Portes qui s'ouvrent avec des clés
  * Rooms piégés (impossible de sortir tant que les monstres ne sont pas mort)
@@ -41,10 +41,8 @@
  * Ajouter des décorations aux salles
  * Sorts:
  *      Inclure les diagonales dans les zones OK
- *      Différent type de zone:
- *          Cercle, ligne, éloignés du joueur
  *      Détecter quelle case est cliquée dans la zone OK
- *      Raccourcis clavier pour choisir le sort
+ *      Raccourcis clavier pour choisir le sort OK
  *      Cooldown (tours) OK
  * Ajouter des stats pour le joueur et les ennemies
  *      Vie (up par des bagues)
@@ -57,7 +55,7 @@
  *      Les enenemies suivent le joueur OK
  *      Les ennemies infligent des dégats au joueur OK
  * Afficher la vie des enemies OK
- *
+ * Ajouter des dégats au corps à corps *
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
  * Ajouter des effets

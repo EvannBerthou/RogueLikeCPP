@@ -94,12 +94,24 @@ void game_t::run() {
                 key_press(event);
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                if (!player.inventory.active) {
-                    player.spells.select_spell(camera, player.pos, mouse_position);
-                    if (player.spells.cast(camera, mouse_position, player.in_room))
-                        new_turn();
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    if (!player.inventory.active) {
+                        player.spells.select_spell(camera, player.pos, mouse_position);
+                        if (player.spells.cast(camera, mouse_position, player.in_room))
+                            new_turn();
+                    }
+                    player.consume(player.inventory.slot_hovered(camera, mouse_position));
                 }
-                player.consume(player.inventory.slot_hovered(camera, mouse_position));
+
+                if (event.button.button == SDL_BUTTON_RIGHT) {
+                    if (player.inventory.active) {
+                        item_t *item = player.inventory.slot_hovered(camera, mouse_position);
+                        if (item != NULL) {
+                            player.in_room->items.push_back({player.pos, *item});
+                            player.inventory.remove_item(item);
+                        }
+                    }
+                }
                 break;
             }
         }
