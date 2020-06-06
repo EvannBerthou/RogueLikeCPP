@@ -111,6 +111,10 @@ void game_t::run() {
                             player.inventory.remove_item(item);
                         }
                     }
+                    else {
+                        if (player.physical_damage(camera, mouse_position, player.in_room))
+                            new_turn();
+                    }
                 }
                 break;
             }

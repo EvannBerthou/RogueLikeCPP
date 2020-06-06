@@ -20,15 +20,15 @@ typedef struct {
     int frame_count = 4;
     bool facing_left = true;
 
-    stats_t stats = {100,100,50};
+    stats_t stats = {100,100,25};
     inventory_t inventory = {};
     spells_t spells = {};
 
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
-    void consume(vec2i mouse_position);
     void consume(item_t *item);
+    bool physical_damage(camera_t &camera, vec2i mouse_position, room_t *room);
 
     void take_damage  (int amount);
     void regen_health (int amount);

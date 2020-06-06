@@ -121,3 +121,20 @@ void player_t::regen_health(int amount) {
     stats.health += amount;
     if (stats.health > stats.max_health) stats.health = stats.max_health;
 }
+
+bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *room) {
+    enemy_t *enemy = room->enemy_at(camera.vec2_screen_to_room(mouse_position));
+    if (enemy != NULL) {
+        if (distance(camera.vec2_screen_to_room(mouse_position), pos) < 2.0f) {
+            enemy->take_damage(stats.strength);
+            return true;
+        }
+        else {
+            std::cout << "too far" << std::endl;
+        }
+    }
+    else {
+        std::cout << "no enemy" << std::endl;
+    }
+    return false;
+}
