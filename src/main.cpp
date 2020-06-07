@@ -65,8 +65,8 @@
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
- * Meilleur parsing des items
- *      Plus de messages d'erreurs
+ * Meilleur parsing des items OK
+ *      Plus de messages d'erreurs OK
  * render_text est lent a cause du SDL_DestroyTexture()
  */
 

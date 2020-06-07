@@ -32,7 +32,7 @@ ds {
 
 heal {
     name:healing potion
-    description:regen 50hp
+    description:regen [amount] hp
     texture:healing_potion
     rarity:1
     type:effect
@@ -42,7 +42,7 @@ heal {
 
 damage {
     name:damage potion
-    description:damage 50hp
+    description:damage [amount] hp
     texture:healing_potion
     rarity:1
     type:effect
