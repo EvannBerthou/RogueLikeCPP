@@ -189,8 +189,9 @@ void game_t::render() {
     //spell bar
     player.spells.render(camera, items_textures, mouse_position, font);
 
-    camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
-                                  camera.vec2_screen_to_room(mouse_position));
+    if (!player.inventory.active && !player.stats.active)
+        camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
+                                      camera.vec2_screen_to_room(mouse_position));
 
     SDL_RenderPresent(camera.renderer);
     fps_clock.tick();

@@ -24,6 +24,8 @@ typedef struct {
     inventory_t inventory = {};
     spells_t spells = {};
 
+    item_t equiped_weapon = {};
+
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);
     void render(camera_t &camera, int offset, texture_dict &characters_textures);

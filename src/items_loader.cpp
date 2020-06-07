@@ -55,7 +55,7 @@ std::unordered_map<std::string, item_t> load_items(texture_dict &textures) {
                         std::cout << "no texture provided" << std::endl;
                         current_item.texture = textures.get_texture_by_name("error");
                     }
-                    current_item.id = items.size();
+                    current_item.id = items.size() + 1;
                     items[item_name] = current_item;
                     current_item = {};
                 }
