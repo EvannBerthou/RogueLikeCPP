@@ -48,14 +48,11 @@ void spell_t::set_spell_zone(vec2i pp) {
     }
 }
 
-void spell_t::render_zone(camera_t &camera, texture_dict &textures, vec2i mp) {
+void spell_t::render_zone(camera_t &camera, texture_dict &textures) {
     if (camera.in_transisition) return;
     for (auto &tile_pos: spell_zone) {
         SDL_Rect rect = {tile_pos.x, tile_pos.y, camera.tile_size, camera.tile_size};
         camera.rect_room_to_screen(rect);
-        if (is_hovered(rect, mp))
-            camera.render_texture_to_room(textures.get_texture_by_name("selected"), tile_pos);
-        else
-            camera.render_texture_to_room(textures.get_texture_by_name("hovered"), tile_pos);
+        camera.render_texture_to_room(textures.get_texture_by_name("hovered"), tile_pos);
     }
 }

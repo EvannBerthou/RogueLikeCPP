@@ -129,12 +129,6 @@ bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *r
             enemy->take_damage(stats.strength);
             return true;
         }
-        else {
-            std::cout << "too far" << std::endl;
-        }
-    }
-    else {
-        std::cout << "no enemy" << std::endl;
     }
     return false;
 }

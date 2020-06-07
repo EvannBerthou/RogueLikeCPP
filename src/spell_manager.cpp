@@ -59,6 +59,6 @@ void spells_t::render(camera_t &camera, texture_dict &textures, vec2i mp, TTF_Fo
     }
 
     if (selected_spell != -1) {
-        spells.at(selected_spell).render_zone(camera, textures, mp);
+        spells.at(selected_spell).render_zone(camera, textures);
     }
 }

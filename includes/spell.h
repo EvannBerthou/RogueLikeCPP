@@ -21,7 +21,7 @@ typedef struct {
 
     void set_spell_zone(vec2i pp);
     vec2i* get_hovered(camera_t &camera, vec2i mp);
-    void render_zone(camera_t &camera, texture_dict &textures, vec2i mp);
+    void render_zone(camera_t &camera, texture_dict &textures);
 } spell_t;
 
 #endif
