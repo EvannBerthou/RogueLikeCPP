@@ -62,6 +62,7 @@
  *      Animation lors d'un sort
  *          Shake quand l'ennemie se toucher
  *      Shake quand le joueur prend des dégats OK
+ * Tooltip en survolant les items au sol OK
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key

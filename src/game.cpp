@@ -185,6 +185,13 @@ void game_t::render() {
     render_text(camera.renderer, font, std::to_string(player.stats.health).c_str(),
                 {55,5}, {255,255,0,255});
 
+    if (!player.inventory.active && !player.stats.active){
+        world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
+        if (world_item != NULL) {
+            player.inventory.render_tooltip(camera,items_textures,&world_item->item, font, mouse_position);
+        }
+    }
+
 
     //spell bar
     player.spells.render(camera, items_textures, mouse_position, font);
