@@ -32,11 +32,11 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     if (inventory.active) return false;
     if (event.key.keysym.sym == SDLK_q) facing_left = true;
     if (event.key.keysym.sym == SDLK_d) facing_left = false;
+
     vec2i next_pos = get_next_tile_pos(get_direction_from_keycode(event.key.keysym.sym),pos);
-    if (in_room->has_chest(next_pos)) {
-        std::cout << "chest" << std::endl;
+
+    if (in_room->has_chest(next_pos))
         return false;
-    }
 
     world_item_t *item_on_ground = in_room->has_item(next_pos);
     bool return_value = false;

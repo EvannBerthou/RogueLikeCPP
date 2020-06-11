@@ -1,8 +1,12 @@
 #include "enemy.h"
 
-void enemy_t::take_damage(int amount) {
+bool enemy_t::take_damage(int amount) {
     stats.health -= amount;
-    if (stats.health <= 0) stats.alive = false;
+    if (stats.health <= 0) {
+        stats.alive = false;
+        return true;
+    }
+    return false;
 }
 
 void enemy_t::render(camera_t &camera, vec2i offset) {

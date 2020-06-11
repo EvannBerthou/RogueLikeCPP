@@ -10,6 +10,7 @@
 #include "chest.h"
 #include "vec2.h"
 #include "enemy.h"
+#include "textures.h"
 
 typedef struct room_t {
     vec2i pos;
@@ -58,7 +59,15 @@ typedef struct room_t {
             }
     }
 
-    void render (camera_t &camera, int offset);
+    void remove_chest(chest_t *chest) {
+        for (std::vector<chest_t>::size_type i = 0; i < chests.size(); i++)
+            if (&chests.at(i) == chest) {
+                chests.erase(chests.begin() + i);
+                return;
+            }
+    }
+
+    void render (camera_t &camera, int offset, texture_dict &textures);
     void update (float dt);
 } room_t;
 

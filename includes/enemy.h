@@ -12,7 +12,7 @@ typedef struct enemy_t {
     stats_t stats = {100,100,10};
     bool battle_started = false;
 
-    void take_damage(int amount);
+    bool take_damage(int amount);
     void render(camera_t &camera, vec2i offset);
 } enemy_t;
 

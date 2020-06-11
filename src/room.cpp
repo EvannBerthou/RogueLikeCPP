@@ -1,7 +1,7 @@
 #include <cmath>
 #include "room.h"
 
-void room_t::render (camera_t &camera, int offset){
+void room_t::render (camera_t &camera, int offset, texture_dict &textures){
     int offset_x = pos.x * (15 * camera.tile_size + offset);
     int offset_y = pos.y * (11 * camera.tile_size + offset);
     int center_x = (camera.w / 2) - ((15 * camera.tile_size + 50) / 2);
@@ -22,7 +22,7 @@ void room_t::render (camera_t &camera, int offset){
         SDL_Rect rect = {offset_x + center_x + chest.pos.x * camera.tile_size,
                          offset_y + center_y + chest.pos.y * camera.tile_size,
                          camera.tile_size, camera.tile_size};
-        camera.render_texture(chest.texture, &rect);
+        camera.render_texture(textures.get_texture_by_name("chest"), &rect);
     }
 
     for (auto &enemy: this->enemies) {

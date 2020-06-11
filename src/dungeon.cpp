@@ -57,15 +57,10 @@ bool room_exists(std::vector<room_t> &rooms, room_t &room){
 }
 
 
-dungeon_t generate_dungeon(int seed, int n_w, int n_h, int number_of_rooms) {
+dungeon_t generate_dungeon(int seed, int number_of_rooms) {
     srand(seed);
     dungeon_t d;
     d.rooms.reserve(number_of_rooms);
-
-    if (number_of_rooms > n_w * n_h) {
-        printf("Plus de rooms que de place disponible (%d >= %d)\n", number_of_rooms, (n_w*n_h));
-        exit(1);
-    }
 
     d.rooms.push_back({{0,0}});
     room_t first_room = d.rooms.at(0);

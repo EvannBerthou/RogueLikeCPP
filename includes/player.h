@@ -10,6 +10,7 @@
 #include "vec2.h"
 #include "slot.h"
 #include "stats.h"
+#include "chest.h"
 
 typedef struct {
     room_t *in_room;
@@ -24,7 +25,10 @@ typedef struct {
     inventory_t inventory = {};
     spells_t spells = {};
 
+    chest_t *in_chest = NULL;
+
     item_t equiped_weapon = {};
+
 
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);

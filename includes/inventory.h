@@ -12,18 +12,30 @@
 
 int constexpr INVENTORY_SIZE = 8;
 int constexpr SLOT_SIZE = 100;
+int constexpr SPACING = 30;
 
 typedef struct {
     void init_inventory();
     void add_item(item_t *item);
     void render(camera_t &camera, texture_dict &textures);
+
     item_t *slot_hovered(camera_t &camera, vec2i mp);
-    void render_tooltip(camera_t &camera, texture_dict &textures,
-                        item_t *item, TTF_Font *font, vec2i mouse_position);
+
     void remove_item(item_t *item);
 
-    slot_t m_slots[INVENTORY_SIZE] = {};
+    void open(bool in_chest, bool is_chest);
+    void toggle_inventory();
+    void close_inventory();
+
+    slot_t slots[INVENTORY_SIZE] = {};
     bool active = false;
+
+    bool in_chest = false;
+    bool is_chest = false;
 } inventory_t;
+
+
+void render_tooltip(camera_t &camera, texture_dict &textures,
+                    item_t *item, TTF_Font *font, vec2i mouse_position);
 
 #endif

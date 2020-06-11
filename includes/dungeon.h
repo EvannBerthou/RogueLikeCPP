@@ -16,7 +16,7 @@ typedef struct {
 
 } dungeon_t;
 
-dungeon_t generate_dungeon(int seed, int n_w, int n_h, int number_of_rooms);
+dungeon_t generate_dungeon(int seed, int number_of_rooms);
 SDL_Texture *get_texture_from_position(texture_dict &textures, int x, int y);
 SDL_Texture *get_door_texture(texture_dict &textures, int side);
 void generate_tiles(dungeon_t *d, texture_dict &textures, SDL_Renderer *renderer);

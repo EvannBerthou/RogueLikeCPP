@@ -11,9 +11,12 @@
  * Ajouter des ennemies
  *      IA des ennemies
  *          A* pathfinding OK
+ *      Quand un ennemie meurt, il laisse un coffre avec son loot
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
- *      Ouvrir un menu avec le contenue du coffre lors de la collision
+ *      Faire disparaitre le coffre une fois vide OK
+ *      Ouvrir un menu avec le contenue du coffre lors d'un clique dessus OK
+ *          Ajouter un inventaire au coffre OK
  * Ajouter inventaire
  *      Tooltip sur les items
  *          nom OK

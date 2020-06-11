@@ -10,6 +10,29 @@
 #include "enemy.h"
 #include "game.h"
 
+static item_t * get_hovered_item(player_t &player, camera_t &camera, vec2i mp, bool &in_chest) {
+    item_t *inv_item = player.inventory.slot_hovered(camera, mp);
+    if (inv_item != NULL) {
+        in_chest = false;
+        return inv_item;
+    }
+
+    if (player.in_chest != NULL) {
+        item_t *chest_item = player.in_chest->inventory.slot_hovered(camera,mp);
+        if (chest_item != NULL) {
+            in_chest = true;
+            return chest_item;
+        }
+    }
+
+    return NULL;
+}
+
+static item_t * get_hovered_item(player_t &player, camera_t &camera, vec2i mp) {
+    bool tmp = false;
+    return get_hovered_item(player, camera, mp, tmp);
+}
+
 int game_t::init() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0){
         printf("Could not initialize SDL: %s\n", SDL_GetError());
@@ -47,7 +70,7 @@ int game_t::init() {
 
     items = load_items(items_textures);
 
-    dungeon = generate_dungeon(time(NULL),5,5,10);
+    dungeon = generate_dungeon(time(NULL), 10);
     generate_tiles(&dungeon, room_textures, renderer);
     player = {&dungeon.rooms[0]};
     player.inventory.init_inventory();
@@ -62,8 +85,11 @@ int game_t::init() {
     dungeon.rooms.at(0).items.push_back({{9,2}, items["damage"] });
     dungeon.rooms.at(0).items.push_back({{4,5}, items["wand"] });
     dungeon.rooms.at(1).items.push_back({{7,5}, items["ds"]   });
-    dungeon.rooms.at(0).chests.push_back({{3,8}, items_textures.get_texture_by_name("chest")});
-    dungeon.rooms.at(0).enemies.push_back({{5,8}, characters_textures.get_texture_by_name("ennemy")});
+    chest_t chest = {{6,5}};
+    chest.inventory.init_inventory();
+    chest.inventory.add_item(&items["wand"]);
+    dungeon.rooms.at(0).chests.push_back(chest);
+    //dungeon.rooms.at(0).enemies.push_back({{5,8}, characters_textures.get_texture_by_name("ennemy")});
     dungeon.rooms.at(1).enemies.push_back({{8,3}, characters_textures.get_texture_by_name("ennemy")});
     dungeon.rooms.at(1).enemies.push_back({{5,5}, characters_textures.get_texture_by_name("ennemy")});
 
@@ -100,7 +126,24 @@ void game_t::run() {
                         if (player.spells.cast(camera, mouse_position, player.in_room))
                             new_turn();
                     }
-                    player.consume(player.inventory.slot_hovered(camera, mouse_position));
+
+                    bool in_chest;
+                    item_t *item = get_hovered_item(player, camera, mouse_position, in_chest);
+                    if (item != NULL) {
+                        if (in_chest) {
+                            player.inventory.add_item(item);
+                            player.in_chest->inventory.remove_item(item);
+                        }
+                        else
+                            player.consume(item);
+                    }
+
+                    chest_t *chest = player.in_room->has_chest(camera.vec2_screen_to_room(mouse_position));
+                    if (chest != NULL && distance(chest->pos, player.pos) < 2.0f) {
+                        player.inventory.open(true, false);
+                        chest->inventory.open(true, true);
+                        player.in_chest = chest;
+                    }
                 }
 
                 if (event.button.button == SDL_BUTTON_RIGHT) {
@@ -135,7 +178,12 @@ void game_t::key_press(SDL_Event &event) {
         player.stats.active = !player.stats.active;
 
     if (event.key.keysym.sym == SDLK_f && !player.stats.active) {
-        player.inventory.active = !player.inventory.active;
+        player.inventory.toggle_inventory();
+        if (player.in_chest != NULL) {
+            player.in_chest->inventory.close_inventory();
+            player.in_room->remove_chest(player.in_chest);
+            player.in_chest = NULL;
+        }
         player.spells.selected_spell = -1;
     }
 
@@ -153,7 +201,6 @@ void game_t::key_press(SDL_Event &event) {
             }
         }
     }
-
 }
 
 void game_t::update() {
@@ -172,23 +219,27 @@ void game_t::update() {
 }
 
 void game_t::render() {
-    player.in_room->render(camera, offset);
+    player.in_room->render(camera, offset, items_textures);
     if (camera.in_transisition)
-        player.prev_room->render(camera, offset);
+        player.prev_room->render(camera, offset, items_textures);
 
     player.render(camera, offset, characters_textures);
     player.inventory.render(camera, items_textures);
+    if (player.in_chest != NULL)
+        player.in_chest->inventory.render(camera, items_textures);
     player.stats.render(camera, items_textures, font);
-    item_t *hovered_item = player.inventory.slot_hovered(camera, mouse_position);
-    if (hovered_item != NULL)
-        player.inventory.render_tooltip(camera, items_textures, hovered_item, font, mouse_position);
+
+    item_t *item = get_hovered_item(player, camera, mouse_position);
+    if (item != NULL) {
+        render_tooltip(camera, items_textures, item, font, mouse_position);
+    }
     render_text(camera.renderer, font, std::to_string(player.stats.health).c_str(),
                 {55,5}, {255,255,0,255});
 
     if (!player.inventory.active && !player.stats.active){
         world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
         if (world_item != NULL) {
-            player.inventory.render_tooltip(camera,items_textures,&world_item->item, font, mouse_position);
+            render_tooltip(camera,items_textures,&world_item->item, font, mouse_position);
         }
     }
 
@@ -209,7 +260,10 @@ void game_t::new_turn() {
     turn_count++;
     std::cout << "starting turn : " << turn_count << std::endl;
     for (auto &e: player.in_room->enemies) {
-        if (!e.stats.alive) continue;
+        if (!e.stats.alive) {
+            player.in_room->chests.push_back({e.pos});
+            continue;
+        }
         std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
         vec2i pos = path.back();
 
