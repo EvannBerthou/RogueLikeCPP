@@ -11,7 +11,7 @@
  * Ajouter des ennemies
  *      IA des ennemies
  *          A* pathfinding OK
- *      Quand un ennemie meurt, il laisse un coffre avec son loot
+ *      Quand un ennemie meurt, il laisse un coffre avec son loot OK
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
  *      Faire disparaitre le coffre une fois vide OK
@@ -66,12 +66,15 @@
  *          Shake quand l'ennemie se toucher
  *      Shake quand le joueur prend des dégats OK
  * Tooltip en survolant les items au sol OK
+ * Ajouter des drop tables
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * Meilleur parsing des items OK
  *      Plus de messages d'erreurs OK
  * render_text est lent a cause du SDL_DestroyTexture()
+ * Scale l'inventaire en fonction de la résolution OK
+ * Refaire le code du rendu de l'inventaire
  */
 
 int main(){

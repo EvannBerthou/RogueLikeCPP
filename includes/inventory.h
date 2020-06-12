@@ -12,7 +12,7 @@
 
 int constexpr INVENTORY_SIZE = 8;
 int constexpr SLOT_SIZE = 100;
-int constexpr SPACING = 30;
+int constexpr SPACING = 35;
 
 typedef struct {
     void init_inventory();

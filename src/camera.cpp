@@ -101,3 +101,9 @@ void camera_t::begin_shake() {
     original = vec2i(x,y);
     shaking = true;
 }
+
+void camera_t::scale_rect_with_offset(SDL_Rect &rect, vec2i offset, vec2i size_offset) {
+    float scale = (w < 800 || h < 600)? 0.5 : 1;
+    rect = { (int) (rect.x + offset.x * scale), (int)(rect.y + offset.y * scale),
+             (int) (rect.w + size_offset.x  * scale), (int)(rect.h + size_offset.y * scale)};
+}

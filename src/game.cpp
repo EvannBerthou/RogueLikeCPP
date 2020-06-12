@@ -254,6 +254,7 @@ void game_t::render() {
         camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
                                       camera.vec2_screen_to_room(mouse_position));
 
+
     SDL_RenderPresent(camera.renderer);
     fps_clock.tick();
     SDL_Delay(1);

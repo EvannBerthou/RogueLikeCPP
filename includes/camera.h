@@ -24,6 +24,8 @@ typedef struct camera_t {
     void begin_transistion(vec2i from, vec2i to);
     void begin_shake();
 
+    void scale_rect_with_offset(SDL_Rect &rect, vec2i offset, vec2i size_offset);
+
     vec2i moving_to = vec2i(0,0);
     vec2 dir = vec2(0,0);
     bool in_transisition = false;
