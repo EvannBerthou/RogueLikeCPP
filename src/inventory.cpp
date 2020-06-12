@@ -28,17 +28,17 @@ void inventory_t::init_inventory() {
     }
 }
 
-void inventory_t::add_item(item_t *item) {
+void inventory_t::add_item(item_t item) {
     for (size_t i = 0; i < INVENTORY_SIZE; i++)
     {
         slot_t* slot = &slots[i];
-        if (slot->item.id == item->id && slot->item_count < 3) {
+        if (slot->item.id == item.id && slot->item_count < 3) {
             slot->item_count++;
             return;
         }
 
         if (slot->item.id == -1) {
-            slot->item = *item;
+            slot->item = item;
             slot->item_count++;
             return;
         }

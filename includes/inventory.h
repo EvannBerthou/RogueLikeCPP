@@ -16,7 +16,7 @@ int constexpr SPACING = 30;
 
 typedef struct {
     void init_inventory();
-    void add_item(item_t *item);
+    void add_item(item_t item);
     void render(camera_t &camera, texture_dict &textures);
 
     item_t *slot_hovered(camera_t &camera, vec2i mp);

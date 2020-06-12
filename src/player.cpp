@@ -41,7 +41,7 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     world_item_t *item_on_ground = in_room->has_item(next_pos);
     bool return_value = false;
     if (item_on_ground != NULL) {
-        inventory.add_item(&item_on_ground->item);
+        inventory.add_item(item_on_ground->item);
         in_room->remove_item(item_on_ground);
     }
 
@@ -103,12 +103,13 @@ void player_t::consume(item_t *item) {
             regen_health(item->amount);
         if (item->effect == ItemEffect::Damage)
             take_damage(item->amount);
+        inventory.remove_item(item);
     }
 
     if (item->type == ItemType::Weapon) {
         equiped_weapon = *item;
+        inventory.remove_item(item);
     }
-    inventory.remove_item(item);
 }
 
 

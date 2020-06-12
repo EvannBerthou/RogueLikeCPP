@@ -87,10 +87,11 @@ int game_t::init() {
     dungeon.rooms.at(1).items.push_back({{7,5}, items["ds"]   });
     chest_t chest = {{6,5}};
     chest.inventory.init_inventory();
-    chest.inventory.add_item(&items["wand"]);
+    chest.inventory.add_item(items["wand"]);
     dungeon.rooms.at(0).chests.push_back(chest);
     //dungeon.rooms.at(0).enemies.push_back({{5,8}, characters_textures.get_texture_by_name("ennemy")});
     dungeon.rooms.at(1).enemies.push_back({{8,3}, characters_textures.get_texture_by_name("ennemy")});
+    dungeon.rooms.at(1).enemies.at(0).drop_table.push_back(items["wand"]);
     dungeon.rooms.at(1).enemies.push_back({{5,5}, characters_textures.get_texture_by_name("ennemy")});
 
     fps_clock = fps_clock_t();
@@ -123,15 +124,17 @@ void game_t::run() {
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     if (!player.inventory.active) {
                         player.spells.select_spell(camera, player.pos, mouse_position);
-                        if (player.spells.cast(camera, mouse_position, player.in_room))
+                        if (player.spells.cast(camera, mouse_position, player.in_room)) {
                             new_turn();
+                            break;
+                        }
                     }
 
                     bool in_chest;
                     item_t *item = get_hovered_item(player, camera, mouse_position, in_chest);
                     if (item != NULL) {
                         if (in_chest) {
-                            player.inventory.add_item(item);
+                            player.inventory.add_item(*item);
                             player.in_chest->inventory.remove_item(item);
                         }
                         else
@@ -261,7 +264,13 @@ void game_t::new_turn() {
     std::cout << "starting turn : " << turn_count << std::endl;
     for (auto &e: player.in_room->enemies) {
         if (!e.stats.alive) {
-            player.in_room->chests.push_back({e.pos});
+            if (e.drop_table.size() > 0) {
+                chest_t chest = {e.pos};
+                chest.inventory.init_inventory();
+                for (auto item: e.drop_table)
+                    chest.inventory.add_item(item);
+                player.in_room->chests.push_back(chest);
+            }
             continue;
         }
         std::vector<vec2i> path = find_path(e.pos, player.pos, player.in_room);
