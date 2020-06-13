@@ -11,15 +11,20 @@
 #include "vec2.h"
 
 int constexpr INVENTORY_SIZE = 8;
-int constexpr SLOT_SIZE = 100;
-int constexpr SPACING = 35;
+int constexpr SLOT_SIZE = 75;
+int constexpr SPACING = 25;
 
 typedef struct {
+    SDL_Rect inv_rect = {};
+    int slot_size = 0;
+    SDL_Rect slot_base_rect = {};
+
     void init_inventory();
     void add_item(item_t item);
     void render(camera_t &camera, texture_dict &textures);
+    void update(camera_t &camera);
 
-    item_t *slot_hovered(camera_t &camera, vec2i mp);
+    item_t *slot_hovered(vec2i mp);
 
     void remove_item(item_t *item);
 

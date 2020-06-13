@@ -10,6 +10,7 @@ typedef struct camera_t {
     float y = -5;
     int w = 0, h = 0;
     int tile_size = 50;
+    float scale = 1;
 
     void render_fill_rect_static(SDL_Color color, SDL_Rect *rect);
     void render_fill_rect(SDL_Color color, SDL_Rect *rect);
@@ -37,5 +38,7 @@ typedef struct camera_t {
     float elapsed = 0.0f;
 
 } camera_t;
+
+void scale_rect(SDL_Rect &rect, float factor);
 
 #endif

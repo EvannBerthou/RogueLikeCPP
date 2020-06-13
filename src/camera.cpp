@@ -3,6 +3,7 @@
 #include "vec2.h"
 
 void camera_t::update(double dt){
+    scale = (w < 700 || h < 500) ? 0.5 : 1;
     if (in_transisition){
         if (transition_time < transition_distance){
             transition_time += dt;
@@ -106,4 +107,14 @@ void camera_t::scale_rect_with_offset(SDL_Rect &rect, vec2i offset, vec2i size_o
     float scale = (w < 800 || h < 600)? 0.5 : 1;
     rect = { (int) (rect.x + offset.x * scale), (int)(rect.y + offset.y * scale),
              (int) (rect.w + size_offset.x  * scale), (int)(rect.h + size_offset.y * scale)};
+}
+
+void scale_rect(SDL_Rect &rect, float factor) {
+    // calculate new x and y
+    int new_w = (int)(rect.w * factor);
+    int new_h = (int)(rect.h * factor);
+
+    int new_x = (rect.x + rect.w/2) - (rect.w/2 * factor);
+    int new_y = (rect.y + rect.h/2) - (rect.h/2 * factor);
+    rect = {new_x, new_y, new_w, new_h };
 }

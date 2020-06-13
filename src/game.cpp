@@ -10,15 +10,15 @@
 #include "enemy.h"
 #include "game.h"
 
-static item_t * get_hovered_item(player_t &player, camera_t &camera, vec2i mp, bool &in_chest) {
-    item_t *inv_item = player.inventory.slot_hovered(camera, mp);
+static item_t * get_hovered_item(player_t &player, vec2i mp, bool &in_chest) {
+    item_t *inv_item = player.inventory.slot_hovered(mp);
     if (inv_item != NULL) {
         in_chest = false;
         return inv_item;
     }
 
     if (player.in_chest != NULL) {
-        item_t *chest_item = player.in_chest->inventory.slot_hovered(camera,mp);
+        item_t *chest_item = player.in_chest->inventory.slot_hovered(mp);
         if (chest_item != NULL) {
             in_chest = true;
             return chest_item;
@@ -28,9 +28,9 @@ static item_t * get_hovered_item(player_t &player, camera_t &camera, vec2i mp, b
     return NULL;
 }
 
-static item_t * get_hovered_item(player_t &player, camera_t &camera, vec2i mp) {
+static item_t * get_hovered_item(player_t &player, vec2i mp) {
     bool tmp = false;
-    return get_hovered_item(player, camera, mp, tmp);
+    return get_hovered_item(player, mp, tmp);
 }
 
 int game_t::init() {
@@ -131,7 +131,7 @@ void game_t::run() {
                     }
 
                     bool in_chest;
-                    item_t *item = get_hovered_item(player, camera, mouse_position, in_chest);
+                    item_t *item = get_hovered_item(player, mouse_position, in_chest);
                     if (item != NULL) {
                         if (in_chest) {
                             player.inventory.add_item(*item);
@@ -151,7 +151,7 @@ void game_t::run() {
 
                 if (event.button.button == SDL_BUTTON_RIGHT) {
                     if (player.inventory.active) {
-                        item_t *item = player.inventory.slot_hovered(camera, mouse_position);
+                        item_t *item = player.inventory.slot_hovered(mouse_position);
                         if (item != NULL) {
                             player.in_room->items.push_back({player.pos, *item});
                             player.inventory.remove_item(item);
@@ -216,6 +216,9 @@ void game_t::update() {
         camera.y = player.in_room->pos.y * (11 * camera.tile_size + offset) - 25;
     }
 
+    player.inventory.update(camera);
+    if (player.in_chest != NULL)
+        player.in_chest->inventory.update(camera);
     player.in_room->update(fps_clock.dt);
     if (camera.in_transisition)
         player.prev_room->update(fps_clock.dt);
@@ -232,7 +235,7 @@ void game_t::render() {
         player.in_chest->inventory.render(camera, items_textures);
     player.stats.render(camera, items_textures, font);
 
-    item_t *item = get_hovered_item(player, camera, mouse_position);
+    item_t *item = get_hovered_item(player, mouse_position);
     if (item != NULL) {
         render_tooltip(camera, items_textures, item, font, mouse_position);
     }

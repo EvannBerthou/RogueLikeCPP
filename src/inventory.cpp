@@ -45,75 +45,62 @@ void inventory_t::add_item(item_t item) {
     }
 }
 
-void inventory_t::render(camera_t &camera, texture_dict &textures) {
-    if (!active) return;
-    float scale = (camera.w < 800 || camera.h < 600)? 0.5 : 1;
-    int w = (int)((SLOT_SIZE * 4 + 50) * scale);
-    int h = (int)((SLOT_SIZE * 2 + 50) * scale);
+void inventory_t::update(camera_t &camera) {
+    int w = (int)((SLOT_SIZE * 4 + 50) * camera.scale);
+    int h = (int)((SLOT_SIZE * 2 + 50) * camera.scale);
     int offset_x = camera.w / 2 - w / 2;
     int offset_y = camera.h / 2 - h / 2;
 
-    if (in_chest)
-        offset_y -= (SLOT_SIZE + SPACING) * scale;
-
     if (is_chest)
-        offset_y += ((SLOT_SIZE + SPACING) * 2) * scale;
+        offset_y += (SLOT_SIZE + SPACING + 5) * camera.scale;
+    else if (in_chest)
+        offset_y -= (SLOT_SIZE + SPACING + 5) * camera.scale;
 
-    SDL_Rect bg_rect = { offset_x, offset_y, w, h };
-    camera.scale_rect_with_offset(bg_rect, {-10,-10}, {15,15});
-    camera.render_texture_static(textures.get_texture_by_name("bg"), &bg_rect);
+    inv_rect = { offset_x, offset_y, w, h };
+
+    slot_size = (int)(SLOT_SIZE * camera.scale);
+    slot_base_rect = {(int)(inv_rect.x + SPACING * camera.scale),
+                      (int)(inv_rect.y + SPACING * camera.scale),
+                      slot_size, slot_size };
+}
+
+void inventory_t::render(camera_t &camera, texture_dict &textures) {
+    if (!active)
+        return;
+
+    camera.render_texture_static(textures.get_texture_by_name("bg"), &inv_rect);
 
     for (int i = 0; i < INVENTORY_SIZE; i++)
     {
-        SDL_Rect rect = { i % (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + offset_x,
-                          i / (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + offset_y,
-                          0,0 };
-        camera.scale_rect_with_offset(rect, { 20, 20 }, { SLOT_SIZE, SLOT_SIZE});
-        camera.render_texture_static(textures.get_texture_by_name("slot"), &rect);
+        SDL_Rect slot_rect = { i % (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.x,
+                               i / (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.y,
+                               slot_size, slot_size};
+        camera.render_texture_static(textures.get_texture_by_name("slot"), &slot_rect);
 
         if (slots[i].item_count > 0) {
-            rect = { i % (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + offset_x,
-                     i / (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + offset_y,
-                     0,0 };
-            camera.scale_rect_with_offset(rect, { 35, 35 }, { SLOT_SIZE - 30, SLOT_SIZE - 30});
+            scale_rect(slot_rect, 0.75);
             if (slots[i].item.texture == NULL)
                 std::cout << "no texture for this slot " << i  << std::endl;
-            camera.render_texture_static(slots[i].item.texture, &rect);
+            camera.render_texture_static(slots[i].item.texture, &slot_rect);
         }
     }
 }
 
-slot_t *get_hovered_slot(int x, int y, float scale, camera_t &camera, vec2i mp, slot_t slots[]) {
+item_t *inventory_t::slot_hovered(vec2i mp) {
+    if (!active)
+        return NULL;
+
     for (int i = 0; i < INVENTORY_SIZE; i++)
     {
-        SDL_Rect rect = { i % (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + x,
-                          i / (INVENTORY_SIZE / 2) * (int)(SLOT_SIZE * scale) + y,
-                          0,0 };
-        camera.scale_rect_with_offset(rect, { 20, 20 }, { SLOT_SIZE, SLOT_SIZE});
+        SDL_Rect rect = { i % (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.x,
+                          i / (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.y,
+                          slot_size, slot_size};
         if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
-            return &slots[i];
+            slot_t *slot = &slots[i];
+            if (slot != NULL && slot->item.id != -1)
+                return &slot->item;
         }
     }
-    return NULL;
-}
-
-item_t *inventory_t::slot_hovered(camera_t &camera, vec2i mp) {
-    if (!active) return NULL;
-    float scale = (camera.w < 800 || camera.h < 600) ? 0.5 : 1;
-    int w = (int)((SLOT_SIZE * 4 + 50) * scale);
-    int h = (int)((SLOT_SIZE * 2 + 50) * scale);
-    int offset_x = camera.w / 2 - w / 2;
-    int offset_y = camera.h / 2 - h / 2;
-
-    if (in_chest)
-        offset_y -= (SLOT_SIZE + SPACING) * scale;
-
-    if (is_chest)
-        offset_y += ((SLOT_SIZE + SPACING) * 2) * scale;
-
-    slot_t *slot = get_hovered_slot(offset_x, offset_y, scale, camera, mp, slots);
-    if (slot != NULL && slot->item.id != -1)
-        return &slot->item;
     return NULL;
 }
 
