@@ -138,7 +138,7 @@ void generate_tiles(dungeon_t *d, texture_dict &textures, SDL_Renderer *renderer
     }
 }
 
-void generate_enemies(dungeon_t *d, texture_dict &textures,std::unordered_map<std::string,item_t>&items){
+void generate_enemies(dungeon_t *d, texture_dict &textures, items_map &items) {
     for (auto &room: d->rooms) {
         int enemies_count = rand() % 5;
         for (int i = 0; i < enemies_count; ++i) {

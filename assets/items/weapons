@@ -1,5 +1,6 @@
 # data_name {
-#   description:
+#   name: in game name
+#   description: item's description
 #   texture: in game texture name, not path
 #   rarity: 0 = commun; 1 = rare; ...
 #   type:weapon,armor,effect

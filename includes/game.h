@@ -11,6 +11,8 @@
 #include "textures.h"
 #include "items_loader.h"
 
+typedef std::unordered_map<std::string, item_t> items_map;
+
 typedef struct {
     using clock = std::chrono::time_point<std::chrono::steady_clock>;
     clock LAST = std::chrono::steady_clock::now();
@@ -33,10 +35,10 @@ typedef struct game_t {
     fps_clock_t  fps_clock;
     TTF_Font     *font;
 
-    std::unordered_map<std::string, item_t> items;
-    texture_dict  room_textures        =  texture_dict();
-    texture_dict  items_textures       =  texture_dict();
-    texture_dict  characters_textures  =  texture_dict();
+    items_map items;
+    texture_dict room_textures        =  texture_dict();
+    texture_dict items_textures       =  texture_dict();
+    texture_dict characters_textures  =  texture_dict();
 
     SDL_Window *window = NULL;
     int offset = 100;
@@ -52,6 +54,5 @@ typedef struct game_t {
     void run();
     void exit();
 } game_t;
-
 
 #endif
