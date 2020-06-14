@@ -36,7 +36,11 @@ static int get_opposite_side(int side){
     return -1;
 }
 
-bool get_new_room(std::vector<room_t> &rooms){
+static bool room_exists(std::vector<room_t> &rooms, room_t &room) {
+    return std::find(rooms.begin(), rooms.end(), room) != rooms.end();
+}
+
+static bool get_new_room(std::vector<room_t> &rooms) {
     room_t *random_room = &rooms.at(rand() % rooms.size());
     int side = rand()%4;
     if (random_room->doors[side] != NULL) return false;
@@ -51,11 +55,6 @@ bool get_new_room(std::vector<room_t> &rooms){
     last_room->doors[get_opposite_side(side)] = random_room;
     return true;
 }
-
-bool room_exists(std::vector<room_t> &rooms, room_t &room){
-    return std::find(rooms.begin(), rooms.end(), room) != rooms.end();
-}
-
 
 dungeon_t generate_dungeon(int seed, int number_of_rooms) {
     srand(seed);
@@ -136,5 +135,16 @@ void generate_tiles(dungeon_t *d, texture_dict &textures, SDL_Renderer *renderer
         }
         room.static_texture = static_texture;
         SDL_SetRenderTarget(renderer, NULL);
+    }
+}
+
+void generate_enemies(dungeon_t *d, texture_dict &textures,std::unordered_map<std::string,item_t>&items){
+    for (auto &room: d->rooms) {
+        int enemies_count = rand() % 5;
+        for (int i = 0; i < enemies_count; ++i) {
+            vec2i position = {rand() % 13 + 1, rand() % 8 + 1};
+            room.enemies.push_back({position, textures.get_texture_by_name("ennemy")});
+            room.enemies.at(i).drop_table.push_back(items["wand"]);
+        }
     }
 }

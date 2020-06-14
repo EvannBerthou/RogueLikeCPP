@@ -12,6 +12,7 @@
  *      IA des ennemies
  *          A* pathfinding OK
  *      Quand un ennemie meurt, il laisse un coffre avec son loot OK
+ *      Nombre aléatoire dans chaque room OK
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
  *      Faire disparaitre le coffre une fois vide OK
@@ -22,7 +23,6 @@
  *          nom OK
  *          description OK
  *          rareté OK
- *          effets
  *          valeur en argent
  *          stats (dégat, armure...)
  *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
@@ -58,7 +58,7 @@
  *      Les enenemies suivent le joueur OK
  *      Les ennemies infligent des dégats au joueur OK
  * Afficher la vie des enemies OK
- * Ajouter des dégats au corps à corps
+ * Ajouter des dégats au corps à corps OK
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  *
  * Ajouter des effets
@@ -74,7 +74,7 @@
  *      Plus de messages d'erreurs OK
  * render_text est lent a cause du SDL_DestroyTexture()
  * Scale l'inventaire en fonction de la résolution OK
- * Refaire le code du rendu de l'inventaire
+ * Refaire le code du rendu de l'inventaire OK
  */
 
 int main(){
