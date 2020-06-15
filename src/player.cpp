@@ -98,6 +98,9 @@ void player_t::consume(item_t *item) {
     if (!inventory.active) return;
     if (item == NULL) return;
 
+    if (item->type == ItemType::Undefined)
+        return;
+
     if (item->type == ItemType::Effect){
         if (item->effect == ItemEffect::Heal)
             regen_health(item->amount);
@@ -106,12 +109,9 @@ void player_t::consume(item_t *item) {
         inventory.remove_item(item);
     }
 
-    if (item->type == ItemType::Weapon) {
-        item_t *old_item = NULL;
-        if (equiped_weapon != NULL)
-            old_item = equiped_weapon;
-
-        equiped_weapon = item;
+    else {
+        item_t *old_item = equiped_items[item->type];
+        equiped_items[item->type] = item;
         inventory.remove_item(item);
 
         if (old_item != NULL)
@@ -139,11 +139,18 @@ bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *r
     if (enemy != NULL) {
         if (distance(camera.vec2_screen_to_room(mouse_position), pos) < 2.0f) {
             int damage = stats.strength;
-            if (equiped_weapon != NULL)
-                damage += equiped_weapon->amount;
+            if (equiped_items[ItemType::Sword] != NULL)
+                damage += equiped_items[ItemType::Sword]->amount;
             enemy->take_damage(damage);
             return true;
         }
     }
     return false;
+}
+
+bool player_t::cast(camera_t &camera, vec2i mp, room_t *room) {
+    int wand_damage = 0;
+    if (equiped_items[ItemType::Wand] != NULL)
+        wand_damage = equiped_items[ItemType::Wand]->amount;
+    return spells.cast(camera, mp, room, wand_damage);
 }

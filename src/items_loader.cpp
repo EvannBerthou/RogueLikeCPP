@@ -22,7 +22,8 @@ static std::string remove_trailing_whitespaces(const std::string &s) {
 }
 
 static ItemType get_type_from_str(const std::string &s) {
-    if (s == "weapon") return ItemType::Weapon;
+    if (s == "sword")  return ItemType::Sword;
+    if (s == "wand")   return ItemType::Wand;
     if (s == "armor")  return ItemType::Armor;
     if (s == "effect") return ItemType::Effect;
     return ItemType::Undefined;

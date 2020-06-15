@@ -4,8 +4,8 @@
 #include <SDL2/SDL.h>
 #include <string>
 
-enum class ItemType { Undefined, Weapon, Armor, Effect};
-enum class ItemEffect { None, Heal, Damage};
+enum ItemType { Sword = 0, Wand, Armor, Effect, Undefined};
+enum ItemEffect { Heal = 0, Damage, None};
 
 typedef struct {
     int id;

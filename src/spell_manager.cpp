@@ -22,7 +22,7 @@ void spells_t::select_spell(camera_t &camera, vec2i pp, vec2i mp) {
     }
 }
 
-bool spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
+bool spells_t::cast(camera_t &camera, vec2i mp, room_t *room, int wand_damage) {
     if (selected_spell == -1) return false;
     spell_t &spell = spells.at(selected_spell);
     vec2i *hovered = spell.get_hovered(camera, mp);
@@ -32,7 +32,8 @@ bool spells_t::cast(camera_t &camera, vec2i mp, room_t *room) {
         std::cout << "casting to : " << hovered->x << " " << hovered->y << std::endl;
         enemy_t *enemy = room->enemy_at(*hovered);
         if (enemy != NULL) {
-            enemy->take_damage(spells.at(selected_spell).damage);
+            int damage = spell.damage + wand_damage;
+            enemy->take_damage(damage);
             spell.remaining_cooldown = spell.cooldown + 1;
             selected_spell = -1;
             return true;

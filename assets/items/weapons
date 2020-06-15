@@ -13,7 +13,7 @@ sword {
     description:épée stylée
     texture:sword
     rarity:1
-    type:weapon
+    type:sword
     amount:100
 }
 
@@ -21,8 +21,9 @@ wand {
     name:baton
     description:baton de ouf là
     texture:wand
-    type:weapon
+    type:wand
     rarity:0
+    amount:100
 }
 
 ds {

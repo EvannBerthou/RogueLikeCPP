@@ -120,7 +120,7 @@ void game_t::run() {
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     if (!player.inventory.active) {
                         player.spells.select_spell(camera, player.pos, mouse_position);
-                        if (player.spells.cast(camera, mouse_position, player.in_room)) {
+                        if (player.cast(camera, mouse_position, player.in_room)) {
                             new_turn();
                             break;
                         }

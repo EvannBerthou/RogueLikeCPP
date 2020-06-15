@@ -26,7 +26,7 @@ typedef struct {
 
     chest_t *in_chest = NULL;
 
-    item_t *equiped_weapon = NULL;
+    item_t *equiped_items[3] = {};
 
 
     void update(double dt);
@@ -34,6 +34,7 @@ typedef struct {
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
     void consume(item_t *item);
     bool physical_damage(camera_t &camera, vec2i mouse_position, room_t *room);
+    bool cast(camera_t &camera, vec2i mp, room_t *room);
 
     void take_damage  (int amount);
     void regen_health (int amount);

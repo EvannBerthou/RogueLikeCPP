@@ -15,6 +15,7 @@
  *      Nombre aléatoire dans chaque room OK
  *      Différent type d'enemies
  *          Stats random
+ *              Range aléatoire à partir de la valeur de base (ex:  100 +/- 5% -> [95;105])
  *          Difficulté augmenté en fonction de la salle
  *          Différent type d'attaque
  *              CAC, Distance
@@ -73,6 +74,7 @@
  *      Shake quand le joueur prend des dégats OK
  * Tooltip en survolant les items au sol OK
  * Ajouter des drop tables
+ * Ajouter des stats random aux items
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
