@@ -60,6 +60,7 @@
  * Afficher la vie des enemies OK
  * Ajouter des dégats au corps à corps OK
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
+ * Les enemies traversent les murs quand ils sont collés OK
  *
  * Ajouter des effets
  *      Animation lors d'un sort

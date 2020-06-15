@@ -33,6 +33,10 @@ typedef struct room_t {
         tiles.at(y * 15 + x) = tile;
     }
 
+    bool is_wall(vec2i tile_pos) {
+        return tile_pos.x == 0 || tile_pos.y == 0 || tile_pos.x == 14 || tile_pos.y == 10;
+    }
+
     chest_t *has_chest(vec2i tile_pos) {
         for (auto &chest : chests)
             if (chest.pos == tile_pos) return &chest;
