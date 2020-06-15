@@ -5,7 +5,6 @@
 #include "textures.h"
 #include "camera.h"
 #include "vec2.h"
-#include "slot.h"
 #include "item.h"
 #include "inventory.h"
 

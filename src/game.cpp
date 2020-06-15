@@ -261,7 +261,6 @@ void game_t::render() {
 
 void game_t::new_turn() {
     turn_count++;
-    std::cout << "starting turn : " << turn_count << std::endl;
     for (auto &e: player.in_room->enemies) {
         if (!e.stats.alive) {
             if (e.drop_table.size() > 0) {

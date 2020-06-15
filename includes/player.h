@@ -8,7 +8,6 @@
 #include "spell_manager.h"
 #include "inventory.h"
 #include "vec2.h"
-#include "slot.h"
 #include "stats.h"
 #include "chest.h"
 

@@ -3,7 +3,6 @@
 
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
-#include "slot.h"
 #include "camera.h"
 #include "textures.h"
 #include "item.h"
@@ -32,7 +31,7 @@ typedef struct {
     void toggle_inventory();
     void close_inventory();
 
-    slot_t slots[INVENTORY_SIZE] = {};
+    item_t slots[INVENTORY_SIZE] = {};
     bool active = false;
 
     bool in_chest = false;

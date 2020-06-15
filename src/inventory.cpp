@@ -21,25 +21,18 @@ void render_tooltip(camera_t &camera, texture_dict &textures,
 void inventory_t::init_inventory() {
     for (size_t i = 0; i < INVENTORY_SIZE; i++)
     {
-        slots[i].item.id = -1;
-        slots[i].item_count = 0;
-        slots[i].item.texture = NULL;
-        slots[i].item.description = "";
+        slots[i].id = -1;
+        slots[i].texture = NULL;
+        slots[i].description = "";
     }
 }
 
 void inventory_t::add_item(item_t item) {
     for (size_t i = 0; i < INVENTORY_SIZE; i++)
     {
-        slot_t* slot = &slots[i];
-        if (slot->item.id == item.id && slot->item_count < 3) {
-            slot->item_count++;
-            return;
-        }
-
-        if (slot->item.id == -1) {
-            slot->item = item;
-            slot->item_count++;
+        item_t &slot_item = slots[i];
+        if (slot_item.id == -1) {
+            slot_item = item;
             return;
         }
     }
@@ -77,11 +70,11 @@ void inventory_t::render(camera_t &camera, texture_dict &textures) {
                                slot_size, slot_size};
         camera.render_texture_static(textures.get_texture_by_name("slot"), &slot_rect);
 
-        if (slots[i].item_count > 0) {
+        if (slots[i].id > 0) {
             scale_rect(slot_rect, 0.75);
-            if (slots[i].item.texture == NULL)
+            if (slots[i].texture == NULL)
                 std::cout << "no texture for this slot " << i  << std::endl;
-            camera.render_texture_static(slots[i].item.texture, &slot_rect);
+            camera.render_texture_static(slots[i].texture, &slot_rect);
         }
     }
 }
@@ -96,9 +89,9 @@ item_t *inventory_t::slot_hovered(vec2i mp) {
                           i / (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.y,
                           slot_size, slot_size};
         if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
-            slot_t *slot = &slots[i];
-            if (slot != NULL && slot->item.id != -1)
-                return &slot->item;
+            item_t *slot = &slots[i];
+            if (slot != NULL && slot->id != -1)
+                return slot;
         }
     }
     return NULL;
@@ -106,9 +99,8 @@ item_t *inventory_t::slot_hovered(vec2i mp) {
 
 void inventory_t::remove_item(item_t *item) {
     for (int i = 0; i < INVENTORY_SIZE; ++i) {
-        if (&slots[i].item == item) {
-            slots[i].item.id = -1;
-            slots[i].item_count = 0;
+        if (&slots[i] == item) {
+            slots[i].id = -1;
             return;
         }
     }
