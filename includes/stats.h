@@ -1,23 +1,23 @@
 #ifndef STATS_H
 #define STATS_H
 
-#include <SDL2/SDL_ttf.h>
 #include "camera.h"
 #include "textures.h"
 #include "fonts.h"
-
-int constexpr stats_width  = 400;
-int constexpr stats_height = 200;
+#include "vec2.h"
 
 typedef struct {
     int health;
     int max_health;
-    int strength;
+    int base_strength;
+    int base_magic;
+
+    int strength = base_strength;
+    int magic = base_magic;
 
     bool alive = true;
-    bool active = false;
 
-    void render(camera_t &camera, texture_dict &texture, TTF_Font *font);
+    void render(camera_t &camera, TTF_Font *font, vec2i offset);
 } stats_t;
 
 #endif

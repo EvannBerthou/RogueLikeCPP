@@ -57,9 +57,11 @@
  *      Vie (up par des bagues)
  *      Force (up par l'épée)
  *      Magie (up par le baton)
- *      Défense (up par l'armure, down l'agilité)
+ *      Défense (up par l'armure lourde, down l'agilité)
  *      Agilité (up par une armure légère) -> chance que les enemies ne se déplacent pas pendant un tour
  * Interface avec les stats OK
+ * Interface avec les items equipés
+ *      Ajouter des image pour montrer quel slot correspond à quel item
  * Ajouter le tour par tour
  *      Les enenemies suivent le joueur OK
  *      Les ennemies infligent des dégats au joueur OK
@@ -73,8 +75,8 @@
  *          Shake quand l'ennemie se toucher
  *      Shake quand le joueur prend des dégats OK
  * Tooltip en survolant les items au sol OK
+ * Tooltip pour le sorts
  * Ajouter des drop tables
- * Ajouter des stats random aux items
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
@@ -83,6 +85,7 @@
  * render_text est lent a cause du SDL_DestroyTexture()
  * Scale l'inventaire en fonction de la résolution OK
  * Refaire le code du rendu de l'inventaire OK
+ * Les textes ne changent pas de taille en fonction de la taille de la fenetre (camera.scale)
  */
 
 int main(){

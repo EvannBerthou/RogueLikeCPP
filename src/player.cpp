@@ -91,7 +91,55 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
 
     SDL_Rect health_rect = {5,5, (int)(stats.health * 1.5), 30};
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);
+}
 
+void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Font *font) {
+    if(!render_equipment_menu)
+        return;
+
+    int w = (int)((SLOT_SIZE * 2 + 275) * camera.scale);
+    int h = (int)((SLOT_SIZE * 3 + 75) * camera.scale);
+    base_offset = {camera.w / 2 - w / 2, camera.h / 2 - h / 2};
+    spacing = {(int)(30 * camera.scale), (int)(40 * camera.scale)};
+
+    SDL_Rect bg_rect = { base_offset.x, base_offset.y, w, h };
+    camera.render_texture_static(textures.get_texture_by_name("bg"), &bg_rect);
+
+    stats.render(camera, font, {base_offset.x + 2 * inventory.slot_size + spacing.x,
+                                base_offset.y + spacing.y});
+
+    for (int i = 0; i < EQUIPMENT_SLOTS; i++)
+    {
+        SDL_Rect slot_rect = { i % 2 * inventory.slot_size + base_offset.x + spacing.x,
+                               i / 2 * inventory.slot_size + base_offset.y + spacing.y,
+                               inventory.slot_size, inventory.slot_size};
+        camera.render_texture_static(textures.get_texture_by_name("slot"), &slot_rect);
+
+        if (equipped_items[i] != NULL) {
+            scale_rect(slot_rect, 0.75);
+            if (equipped_items[i]->texture == NULL)
+                std::cout << "no texture for this slot " << i  << std::endl;
+            camera.render_texture_static(equipped_items[i]->texture, &slot_rect);
+        }
+    }
+}
+
+item_t *player_t::hovered_equipment(vec2i mp) {
+    if (!render_equipment_menu)
+        return NULL;
+
+    for (int i = 0; i < EQUIPMENT_SLOTS; i++)
+    {
+        SDL_Rect rect = { i % 2 * inventory.slot_size + base_offset.x + spacing.x,
+                          i / 2 * inventory.slot_size + base_offset.y + spacing.x,
+                          inventory.slot_size, inventory.slot_size};
+        if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
+            item_t *item = equipped_items[i];
+            if (item != NULL)
+                return item;
+        }
+    }
+    return NULL;
 }
 
 void player_t::consume(item_t *item) {
@@ -110,12 +158,19 @@ void player_t::consume(item_t *item) {
     }
 
     else {
-        item_t *old_item = equiped_items[item->type];
-        equiped_items[item->type] = item;
+        std::cout << item->type << std::endl;
+        item_t *old_item = equipped_items[item->type];
+        equipped_items[item->type] = item;
         inventory.remove_item(item);
 
         if (old_item != NULL)
             inventory.add_item(old_item);
+
+        if (item->type == ItemType::Sword)
+            stats.strength = stats.base_strength + item->amount;
+
+        if (item->type == ItemType::Wand)
+            stats.magic = stats.base_magic + item->amount;
     }
 }
 
@@ -138,10 +193,7 @@ bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *r
     enemy_t *enemy = room->enemy_at(camera.vec2_screen_to_room(mouse_position));
     if (enemy != NULL) {
         if (distance(camera.vec2_screen_to_room(mouse_position), pos) < 2.0f) {
-            int damage = stats.strength;
-            if (equiped_items[ItemType::Sword] != NULL)
-                damage += equiped_items[ItemType::Sword]->amount;
-            enemy->take_damage(damage);
+            enemy->take_damage(stats.strength);
             return true;
         }
     }
@@ -149,8 +201,5 @@ bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *r
 }
 
 bool player_t::cast(camera_t &camera, vec2i mp, room_t *room) {
-    int wand_damage = 0;
-    if (equiped_items[ItemType::Wand] != NULL)
-        wand_damage = equiped_items[ItemType::Wand]->amount;
-    return spells.cast(camera, mp, room, wand_damage);
+    return spells.cast(camera, mp, room, stats.magic);
 }

@@ -4,7 +4,18 @@
 #include <SDL2/SDL.h>
 #include <string>
 
-enum ItemType { Sword = 0, Wand, Armor, Effect, Undefined};
+// Order based on indexes for equipment_item
+enum ItemType {
+    Sword = 0,
+    Helmet,
+    Wand,
+    Chestplate,
+    Ring,
+    Pants,
+    Effect,
+    Undefined
+};
+
 enum ItemEffect { Heal = 0, Damage, None};
 
 typedef struct {

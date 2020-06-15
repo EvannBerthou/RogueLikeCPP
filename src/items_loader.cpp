@@ -22,10 +22,13 @@ static std::string remove_trailing_whitespaces(const std::string &s) {
 }
 
 static ItemType get_type_from_str(const std::string &s) {
-    if (s == "sword")  return ItemType::Sword;
-    if (s == "wand")   return ItemType::Wand;
-    if (s == "armor")  return ItemType::Armor;
-    if (s == "effect") return ItemType::Effect;
+    if  (s  ==  "sword")       return  ItemType::Sword;
+    if  (s  ==  "wand")        return  ItemType::Wand;
+    if  (s  ==  "helmet")      return  ItemType::Helmet;
+    if  (s  ==  "chestplate")  return  ItemType::Chestplate;
+    if  (s  ==  "pants")       return  ItemType::Pants;
+    if  (s  ==  "ring")        return  ItemType::Ring;
+    if  (s  ==  "effect")      return  ItemType::Effect;
     return ItemType::Undefined;
 }
 

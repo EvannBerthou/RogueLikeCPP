@@ -11,7 +11,7 @@
 typedef struct enemy_t {
     vec2i pos;
     SDL_Texture *texture;
-    stats_t stats = {100,100,10};
+    stats_t stats = {100,100,10,0};
     bool battle_started = false;
     std::vector<item_t*> drop_table = {};
 

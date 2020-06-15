@@ -25,6 +25,13 @@ static item_t * get_hovered_item(player_t &player, vec2i mp, bool &in_chest) {
         }
     }
 
+    if (player.render_equipment_menu) {
+        item_t *equipment_item = player.hovered_equipment(mp);
+        if (equipment_item != NULL) {
+            in_chest = false;
+            return equipment_item;
+        }
+    }
     return NULL;
 }
 
@@ -153,6 +160,13 @@ void game_t::run() {
                             player.inventory.remove_item(item);
                         }
                     }
+                    else if(player.render_equipment_menu) {
+                        item_t *item = player.hovered_equipment(mouse_position);
+                        if (item != NULL) {
+                            player.inventory.add_item(item);
+                            player.equipped_items[item->type] = NULL;
+                        }
+                    }
                     else {
                         if (player.physical_damage(camera, mouse_position, player.in_room))
                             new_turn();
@@ -174,9 +188,9 @@ void game_t::key_press(SDL_Event &event) {
     if (event.key.keysym.sym == SDLK_e) player.stats.health -= 10;
 
     if (event.key.keysym.sym == SDLK_c && !player.inventory.active)
-        player.stats.active = !player.stats.active;
+        player.render_equipment_menu = !player.render_equipment_menu;
 
-    if (event.key.keysym.sym == SDLK_f && !player.stats.active) {
+    if (event.key.keysym.sym == SDLK_f && !player.render_equipment_menu) {
         player.inventory.toggle_inventory();
         if (player.in_chest != NULL) {
             player.in_chest->inventory.close_inventory();
@@ -226,10 +240,10 @@ void game_t::render() {
         player.prev_room->render(camera, offset, items_textures);
 
     player.render(camera, offset, characters_textures);
+    player.render_equipment(camera, items_textures, font);
     player.inventory.render(camera, items_textures);
     if (player.in_chest != NULL)
         player.in_chest->inventory.render(camera, items_textures);
-    player.stats.render(camera, items_textures, font);
 
     item_t *item = get_hovered_item(player, mouse_position);
     if (item != NULL) {
@@ -238,7 +252,7 @@ void game_t::render() {
     render_text(camera.renderer, font, std::to_string(player.stats.health).c_str(),
                 {55,5}, {255,255,0,255});
 
-    if (!player.inventory.active && !player.stats.active){
+    if (!player.inventory.active && !player.render_equipment_menu){
         world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
         if (world_item != NULL) {
             render_tooltip(camera,items_textures, world_item->item, font, mouse_position);
@@ -249,7 +263,7 @@ void game_t::render() {
     //spell bar
     player.spells.render(camera, items_textures, mouse_position, font);
 
-    if (!player.inventory.active && !player.stats.active)
+    if (!player.inventory.active && !player.render_equipment_menu)
         camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
                                       camera.vec2_screen_to_room(mouse_position));
 
