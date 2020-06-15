@@ -26,7 +26,7 @@ typedef struct {
 
     chest_t *in_chest = NULL;
 
-    item_t equiped_weapon = {};
+    item_t *equiped_weapon = NULL;
 
 
     void update(double dt);

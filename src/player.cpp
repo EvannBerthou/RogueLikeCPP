@@ -107,8 +107,15 @@ void player_t::consume(item_t *item) {
     }
 
     if (item->type == ItemType::Weapon) {
-        equiped_weapon = *item;
+        item_t *old_item = NULL;
+        if (equiped_weapon != NULL)
+            old_item = equiped_weapon;
+
+        equiped_weapon = item;
         inventory.remove_item(item);
+
+        if (old_item != NULL)
+            inventory.add_item(old_item);
     }
 }
 
@@ -132,8 +139,8 @@ bool player_t::physical_damage(camera_t &camera, vec2i mouse_position, room_t *r
     if (enemy != NULL) {
         if (distance(camera.vec2_screen_to_room(mouse_position), pos) < 2.0f) {
             int damage = stats.strength;
-            if (equiped_weapon.id != 0)
-                damage += equiped_weapon.amount;
+            if (equiped_weapon != NULL)
+                damage += equiped_weapon->amount;
             enemy->take_damage(damage);
             return true;
         }

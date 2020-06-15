@@ -13,7 +13,7 @@ typedef struct enemy_t {
     SDL_Texture *texture;
     stats_t stats = {100,100,10};
     bool battle_started = false;
-    std::vector<item_t> drop_table = {};
+    std::vector<item_t*> drop_table = {};
 
     bool take_damage(int amount);
     void render(camera_t &camera, vec2i offset);

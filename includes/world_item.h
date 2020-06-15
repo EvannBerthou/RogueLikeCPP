@@ -7,7 +7,7 @@
 
 typedef struct {
     vec2i pos;
-    item_t item;
+    item_t *item;
     double angle = 0;
 
     void update(double dt) {

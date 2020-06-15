@@ -81,14 +81,14 @@ int game_t::init() {
     player.spells.spells.at(3).texture = items_textures.get_texture_by_name("wand");
     camera = { renderer };
 
-    dungeon.rooms.at(0).items.push_back({{2,5}, items["sword"]});
-    dungeon.rooms.at(0).items.push_back({{8,2}, items["heal"] });
-    dungeon.rooms.at(0).items.push_back({{9,2}, items["damage"] });
-    dungeon.rooms.at(0).items.push_back({{4,5}, items["wand"] });
-    dungeon.rooms.at(1).items.push_back({{7,5}, items["ds"]   });
+    dungeon.rooms.at(0).items.push_back({{2,5}, &items["sword"]});
+    dungeon.rooms.at(0).items.push_back({{8,2}, &items["heal"] });
+    dungeon.rooms.at(0).items.push_back({{9,2}, &items["damage"] });
+    dungeon.rooms.at(0).items.push_back({{4,5}, &items["wand"] });
+    dungeon.rooms.at(1).items.push_back({{7,5}, &items["ds"]   });
     chest_t chest = {{6,5}};
     chest.inventory.init_inventory();
-    chest.inventory.add_item(items["wand"]);
+    chest.inventory.add_item(&items["wand"]);
 
     fps_clock = fps_clock_t();
     return 0;
@@ -130,7 +130,7 @@ void game_t::run() {
                     item_t *item = get_hovered_item(player, mouse_position, in_chest);
                     if (item != NULL) {
                         if (in_chest) {
-                            player.inventory.add_item(*item);
+                            player.inventory.add_item(item);
                             player.in_chest->inventory.remove_item(item);
                         }
                         else
@@ -149,7 +149,7 @@ void game_t::run() {
                     if (player.inventory.active) {
                         item_t *item = player.inventory.slot_hovered(mouse_position);
                         if (item != NULL) {
-                            player.in_room->items.push_back({player.pos, *item});
+                            player.in_room->items.push_back({player.pos, item});
                             player.inventory.remove_item(item);
                         }
                     }
@@ -241,7 +241,7 @@ void game_t::render() {
     if (!player.inventory.active && !player.stats.active){
         world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
         if (world_item != NULL) {
-            render_tooltip(camera,items_textures,&world_item->item, font, mouse_position);
+            render_tooltip(camera,items_textures, world_item->item, font, mouse_position);
         }
     }
 

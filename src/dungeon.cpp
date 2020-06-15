@@ -144,7 +144,7 @@ void generate_enemies(dungeon_t *d, texture_dict &textures, items_map &items) {
         for (int i = 0; i < enemies_count; ++i) {
             vec2i position = {rand() % 13 + 1, rand() % 8 + 1};
             room.enemies.push_back({position, textures.get_texture_by_name("ennemy")});
-            room.enemies.at(i).drop_table.push_back(items["wand"]);
+            room.enemies.at(i).drop_table.push_back(&items["wand"]);
         }
     }
 }

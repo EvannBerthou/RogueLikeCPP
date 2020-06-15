@@ -15,7 +15,7 @@ void room_t::render (camera_t &camera, int offset, texture_dict &textures){
         SDL_Rect rect = {offset_x + center_x + item.pos.x * camera.tile_size,
                          offset_y + center_y + item.pos.y * camera.tile_size + (int)(sin(item.angle) * 8),
                          camera.tile_size, camera.tile_size};
-        camera.render_texture(item.item.texture, &rect);
+        camera.render_texture(item.item->texture, &rect);
     }
 
     for (auto &chest: this->chests) {

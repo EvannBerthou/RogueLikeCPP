@@ -13,6 +13,11 @@
  *          A* pathfinding OK
  *      Quand un ennemie meurt, il laisse un coffre avec son loot OK
  *      Nombre aléatoire dans chaque room OK
+ *      Différent type d'enemies
+ *          Stats random
+ *          Difficulté augmenté en fonction de la salle
+ *          Différent type d'attaque
+ *              CAC, Distance
  * Ajouter coffres
  *      Détecter la collision avec les coffres OK
  *      Faire disparaitre le coffre une fois vide OK
