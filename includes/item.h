@@ -18,7 +18,7 @@ enum ItemType {
 
 enum ItemEffect { Heal = 0, Damage, None};
 
-typedef struct {
+typedef struct item_t {
     int id;
     SDL_Texture *texture;
     std::string name;
@@ -27,6 +27,15 @@ typedef struct {
     ItemType type;
     ItemEffect effect;
     int amount;
+    int range = 50;
+
+    item_t random_stats() {
+        item_t new_item = *this;
+        int min = amount - range;
+        int max = amount + range;
+        new_item.amount = (rand() % (max - min + 1) + min);
+        return new_item;
+    }
 } item_t;
 
 #endif

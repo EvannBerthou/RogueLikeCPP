@@ -158,7 +158,6 @@ void player_t::consume(item_t *item) {
     }
 
     else {
-        std::cout << item->type << std::endl;
         item_t *old_item = equipped_items[item->type];
         equipped_items[item->type] = item;
         inventory.remove_item(item);

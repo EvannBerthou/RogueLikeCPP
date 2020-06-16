@@ -16,20 +16,34 @@ void render_tooltip(camera_t &camera, texture_dict &textures,
     render_text(camera.renderer, font, item->name.c_str(),{mp.x+20,mp.y+10},
                 color_from_rarity(item->rarity));
     render_text(camera.renderer, font, item->description.c_str(), {mp.x+20,mp.y+30}, {255,255,255,255});
+
+    if (item->type == ItemType::Sword) {
+        std::string stat = "Strength : " + std::to_string(item->amount);
+        render_text(camera.renderer, font, stat.c_str(), {mp.x+20,mp.y+50}, {255,0,255,255});
+    }
+    if (item->type == ItemType::Wand) {
+        std::string stat = "Magic : " + std::to_string(item->amount);
+        render_text(camera.renderer, font, stat.c_str(), {mp.x+20,mp.y+50}, {255,0,255,255});
+    }
 }
 
 void inventory_t::init_inventory() {
     for (size_t i = 0; i < INVENTORY_SIZE; i++)
     {
-        slots[i] = NULL;
+        slots[i].id = -1;
     }
 }
 
+// FIXME: a supprimer
 void inventory_t::add_item(item_t *item) {
+    add_item(*item);
+}
+
+void inventory_t::add_item(item_t item) {
     for (size_t i = 0; i < INVENTORY_SIZE; i++)
     {
-        item_t *slot_item = slots[i];
-        if (slot_item == NULL) {
+        item_t *slot_item = &slots[i];
+        if (slot_item->id == -1) {
             slots[i] = item;
             return;
         }
@@ -68,11 +82,11 @@ void inventory_t::render(camera_t &camera, texture_dict &textures) {
                                slot_size, slot_size};
         camera.render_texture_static(textures.get_texture_by_name("slot"), &slot_rect);
 
-        if (slots[i] != NULL) {
+        if (slots[i].id > 0) {
             scale_rect(slot_rect, 0.75);
-            if (slots[i]->texture == NULL)
+            if (slots[i].texture == NULL)
                 std::cout << "no texture for this slot " << i  << std::endl;
-            camera.render_texture_static(slots[i]->texture, &slot_rect);
+            camera.render_texture_static(slots[i].texture, &slot_rect);
         }
     }
 }
@@ -87,8 +101,8 @@ item_t *inventory_t::slot_hovered(vec2i mp) {
                           i / (INVENTORY_SIZE / 2) * slot_size + slot_base_rect.y,
                           slot_size, slot_size};
         if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
-            item_t *slot = slots[i];
-            if (slot != NULL)
+            item_t *slot = &slots[i];
+            if (slot->id > 0)
                 return slot;
         }
     }
@@ -97,8 +111,8 @@ item_t *inventory_t::slot_hovered(vec2i mp) {
 
 void inventory_t::remove_item(item_t *item) {
     for (int i = 0; i < INVENTORY_SIZE; ++i) {
-        if (slots[i] == item) {
-            slots[i] = NULL;
+        if (&slots[i] == item) {
+            slots[i].id = -1;
             return;
         }
     }

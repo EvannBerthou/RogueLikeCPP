@@ -25,13 +25,14 @@ typedef struct {
     item_t *slot_hovered(vec2i mp);
 
     void add_item(item_t *item);
+    void add_item(item_t item);
     void remove_item(item_t *item);
 
     void open(bool in_chest, bool is_chest);
     void toggle_inventory();
     void close_inventory();
 
-    item_t *slots[INVENTORY_SIZE] = {};
+    item_t slots[INVENTORY_SIZE] = {};
     bool active = false;
 
     bool in_chest = false;

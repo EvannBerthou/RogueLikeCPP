@@ -69,10 +69,11 @@
  * Ajouter des dégats au corps à corps OK
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
  * Les enemies traversent les murs quand ils sont collés OK
+ * Stats random sur le stuff
  *
  * Ajouter des effets
  *      Animation lors d'un sort
- *          Shake quand l'ennemie se toucher
+ *          Flash rouge quand l'ennemie se toucher
  *      Shake quand le joueur prend des dégats OK
  * Tooltip en survolant les items au sol OK
  * Tooltip pour le sorts
@@ -86,6 +87,12 @@
  * Scale l'inventaire en fonction de la résolution OK
  * Refaire le code du rendu de l'inventaire OK
  * Les textes ne changent pas de taille en fonction de la taille de la fenetre (camera.scale)
+ * Ajouter des constructeurs
+ *      vec2
+ *      chest
+ *      player
+ *      dungeon
+ *      item
  */
 
 int main(){
