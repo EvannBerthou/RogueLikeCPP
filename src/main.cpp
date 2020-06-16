@@ -87,12 +87,6 @@
  * Scale l'inventaire en fonction de la résolution OK
  * Refaire le code du rendu de l'inventaire OK
  * Les textes ne changent pas de taille en fonction de la taille de la fenetre (camera.scale)
- * Ajouter des constructeurs
- *      vec2
- *      chest
- *      player
- *      dungeon
- *      item
  */
 
 int main(){

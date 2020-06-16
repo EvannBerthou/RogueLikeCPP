@@ -31,6 +31,10 @@ struct vector {
     vector<T> operator+(const vector<T> &other) const {
         return {other.x + x, other.y + y};
     }
+
+    vector<T> operator*(const float factor) const {
+        return {(T) (x * factor), (T)(y * factor)};
+    }
 };
 
 template <typename T>

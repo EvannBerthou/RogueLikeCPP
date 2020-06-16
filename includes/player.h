@@ -14,10 +14,10 @@
 
 int constexpr EQUIPMENT_SLOTS = 6;
 
-typedef struct {
+typedef struct player_t {
     room_t *in_room;
     room_t *prev_room = NULL;
-    vec2i pos = {7,5};
+    vec2i pos = vec2i(7,5);
     double frame_time = 0;
     int frame = 0;
     int frame_count = 4;
@@ -31,9 +31,8 @@ typedef struct {
 
     item_t *equipped_items[EQUIPMENT_SLOTS] = {};
     bool render_equipment_menu = false;
-    vec2i base_offset = {0,0};
-    vec2i spacing = {0,0};
-
+    vec2i base_offset = vec2i(0,0);
+    vec2i spacing = vec2i(0,0);
 
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);

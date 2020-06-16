@@ -17,15 +17,13 @@ void player_t::update(double dt) {
 }
 
 vec2i get_next_tile_pos(int dir, vec2i pos) {
-    int x = pos.x;
-    int y = pos.y;
     switch (dir){
-    case 0:  return vec2i(x,y-1);
-    case 1:  return vec2i(x+1,y);
-    case 2:  return vec2i(x,y+1);
-    case 3:  return vec2i(x-1,y);
+    case 0:  return pos + vec2i(0, -1);
+    case 1:  return pos + vec2i(1,  0);
+    case 2:  return pos + vec2i(0,  1);
+    case 3:  return pos + vec2i(-1, 0);
     }
-    return vec2i(x,y);
+    return pos;
 }
 
 bool player_t::move(SDL_Event event, camera_t *camera) {
@@ -33,7 +31,7 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     if (event.key.keysym.sym == SDLK_q) facing_left = true;
     if (event.key.keysym.sym == SDLK_d) facing_left = false;
 
-    vec2i next_pos = get_next_tile_pos(get_direction_from_keycode(event.key.keysym.sym),pos);
+    vec2i next_pos = get_next_tile_pos(get_direction_from_keycode(event.key.keysym.sym), pos);
 
     if (in_room->has_chest(next_pos))
         return false;
@@ -63,10 +61,10 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
                 prev_room = in_room;
                 in_room = new_room;
                 switch(dir){
-                    case 0: pos = {7,9}; break;
-                    case 1: pos = {1,5}; break;
-                    case 2: pos = {7,1}; break;
-                    case 3: pos = {13,5}; break;
+                    case 0: pos = vec2i(7,9); break;
+                    case 1: pos = vec2i(1,5); break;
+                    case 2: pos = vec2i(7,1); break;
+                    case 3: pos = vec2i(13,5); break;
                 }
             }
         }
@@ -97,12 +95,11 @@ void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Fo
     if(!render_equipment_menu)
         return;
 
-    int w = (int)((SLOT_SIZE * 2 + 275) * camera.scale);
-    int h = (int)((SLOT_SIZE * 3 + 75) * camera.scale);
-    base_offset = {camera.w / 2 - w / 2, camera.h / 2 - h / 2};
-    spacing = {(int)(30 * camera.scale), (int)(40 * camera.scale)};
+    vec2i size = vec2i((SLOT_SIZE * 2 + 275), (SLOT_SIZE * 3 + 75)) * camera.scale;
+    base_offset = vec2i(camera.w / 2 - size.x / 2, camera.h / 2 - size.y / 2);
+    spacing = vec2i(30, 40) * camera.scale;
 
-    SDL_Rect bg_rect = { base_offset.x, base_offset.y, w, h };
+    SDL_Rect bg_rect = { base_offset.x, base_offset.y, size.x, size.y };
     camera.render_texture_static(textures.get_texture_by_name("bg"), &bg_rect);
 
     stats.render(camera, font, {base_offset.x + 2 * inventory.slot_size + spacing.x,

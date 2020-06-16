@@ -8,9 +8,13 @@
 #include "item.h"
 #include "inventory.h"
 
-typedef struct {
+typedef struct chest_t{
     vec2i pos;
     inventory_t inventory = {};
+
+    chest_t(vec2i _pos) : pos(_pos) {
+        inventory.init_inventory();
+    }
 } chest_t;
 
 #endif

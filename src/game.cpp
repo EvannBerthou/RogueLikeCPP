@@ -93,9 +93,6 @@ int game_t::init() {
     dungeon.rooms.at(0).items.push_back({{9,2}, items["damage"].random_stats()});
     dungeon.rooms.at(0).items.push_back({{4,5}, items["wand"].random_stats()});
     dungeon.rooms.at(1).items.push_back({{7,5}, items["ds"].random_stats()});
-    chest_t chest = {{6,5}};
-    chest.inventory.init_inventory();
-    chest.inventory.add_item(items["wand"].random_stats());
 
     fps_clock = fps_clock_t();
     return 0;
@@ -278,8 +275,7 @@ void game_t::new_turn() {
     for (auto &e: player.in_room->enemies) {
         if (!e.stats.alive) {
             if (e.drop_table.size() > 0) {
-                chest_t chest = {e.pos};
-                chest.inventory.init_inventory();
+                chest_t chest(e.pos);
                 for (auto item: e.drop_table)
                     chest.inventory.add_item(item);
                 player.in_room->chests.push_back(chest);
