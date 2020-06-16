@@ -27,7 +27,7 @@ typedef struct item_t {
     ItemType type;
     ItemEffect effect;
     int amount;
-    int range = 50;
+    int range;
 
     item_t random_stats() {
         item_t new_item = *this;

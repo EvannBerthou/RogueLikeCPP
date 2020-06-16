@@ -55,6 +55,20 @@ static int convert_to_int(std::string string) {
     return -1;
 }
 
+static int conversion_warning(int value, std::string key, std::string item_name, int line_index) {
+    if (value == -1) {
+        std::cout << "[WARNING] The given " << key << " for " << item_name << " is not an int "
+                  << "(line " << line_index << ")" << std::endl;
+        value = 0;
+    }
+    if (value < 0) {
+        std::cout << "[WARNING] The given " << key << " for " << item_name << " is not valid"
+                  << "it needs to be over 0 " << "(line " << line_index << ")" << std::endl;
+        value = 0;
+    }
+    return value;
+}
+
 static void parse_line(std::string &line, size_t line_index, item_t &item, texture_dict &textures) {
     if (is_key(line, "name")) {
         item.name = extract_value_from_key(line);
@@ -69,17 +83,7 @@ static void parse_line(std::string &line, size_t line_index, item_t &item, textu
     }
     if (is_key(line, "rarity")) {
         std::string rarity_str = extract_value_from_key(line);
-        int rarity = convert_to_int(rarity_str);
-        if (rarity == -1) {
-            std::cout << "[WARNING] The given rarity for " << item.name << " is not an int "
-                      << "(line " << line_index << ")" << std::endl;
-            rarity = 0;
-        }
-        if (rarity < 0 || rarity > 2) {
-            std::cout << "[WARNING] The given rarity for " << item.name << " is not valid"
-                      << "it needs to be over 0 " << "(line " << line_index << ")" << std::endl;
-            rarity = 0;
-        }
+        int rarity = conversion_warning(convert_to_int(rarity_str), "rarity", item.name, line_index);
         item.rarity = rarity;
     }
     if (is_key(line, "type")) {
@@ -92,19 +96,13 @@ static void parse_line(std::string &line, size_t line_index, item_t &item, textu
     }
     if (is_key(line, "amount")) {
         std::string amount_str = extract_value_from_key(line);
-        int amount = convert_to_int(amount_str);
-        if (amount == -1) {
-            std::cout << "[WARNING] The given amount for " << item.name << " is not an int "
-                      << "(line " << line_index << ")" << std::endl;
-            amount = 0;
-        }
-        if (amount < 0) {
-            std::cout << "[WARNING] The given amount for " << item.name << " is not valid"
-                      << "it needs to be over 0 " << "(line " << line_index << ")" << std::endl;
-            amount = 0;
-        }
-
+        int amount = conversion_warning(convert_to_int(amount_str), "amount", item.name, line_index);
         item.amount = amount;
+    }
+    if (is_key(line, "range")) {
+        std::string range_str = extract_value_from_key(line);
+        int range = conversion_warning(convert_to_int(range_str), "range", item.name, line_index);
+        item.range = range;
     }
 }
 

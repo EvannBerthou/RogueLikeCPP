@@ -15,6 +15,7 @@ sword {
     rarity:1
     type:sword
     amount:100
+    range:10
 }
 
 wand {
@@ -24,6 +25,7 @@ wand {
     type:wand
     rarity:0
     amount:100
+    range:5
 }
 
 ds {
