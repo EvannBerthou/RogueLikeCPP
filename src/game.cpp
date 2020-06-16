@@ -82,6 +82,7 @@ int game_t::init() {
     generate_enemies(&dungeon, characters_textures, items);
     player = {&dungeon.rooms[0]};
     player.inventory.init_inventory();
+    player.init_equipment();
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
     player.spells.spells.at(1).texture = items_textures.get_texture_by_name("wand");
     player.spells.spells.at(2).texture = items_textures.get_texture_by_name("wand");
@@ -134,7 +135,7 @@ void game_t::run() {
                     item_t *item = get_hovered_item(player, mouse_position, in_chest);
                     if (item != NULL) {
                         if (in_chest) {
-                            player.inventory.add_item(item);
+                            player.inventory.add_item(*item);
                             player.in_chest->inventory.remove_item(item);
                         }
                         else
@@ -160,8 +161,8 @@ void game_t::run() {
                     else if(player.render_equipment_menu) {
                         item_t *item = player.hovered_equipment(mouse_position);
                         if (item != NULL) {
-                            player.inventory.add_item(item);
-                            player.equipped_items[item->type] = NULL;
+                            player.inventory.add_item(*item);
+                            player.equipped_items[item->type].id = -1;
                         }
                     }
                     else {
@@ -277,7 +278,7 @@ void game_t::new_turn() {
             if (e.drop_table.size() > 0) {
                 chest_t chest(e.pos);
                 for (auto item: e.drop_table)
-                    chest.inventory.add_item(item);
+                    chest.inventory.add_item(item->random_stats());
                 player.in_room->chests.push_back(chest);
             }
             continue;

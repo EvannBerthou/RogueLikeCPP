@@ -91,6 +91,13 @@ void player_t::render(camera_t &camera, int offset, texture_dict &characters_tex
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);
 }
 
+void player_t::init_equipment() {
+    for (size_t i = 0; i < EQUIPMENT_SLOTS; i++)
+    {
+        equipped_items[i].id = -1;
+    }
+}
+
 void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Font *font) {
     if(!render_equipment_menu)
         return;
@@ -112,11 +119,11 @@ void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Fo
                                inventory.slot_size, inventory.slot_size};
         camera.render_texture_static(textures.get_texture_by_name("slot"), &slot_rect);
 
-        if (equipped_items[i] != NULL) {
+        if (equipped_items[i].id > 0) {
             scale_rect(slot_rect, 0.75);
-            if (equipped_items[i]->texture == NULL)
+            if (equipped_items[i].texture == NULL)
                 std::cout << "no texture for this slot " << i  << std::endl;
-            camera.render_texture_static(equipped_items[i]->texture, &slot_rect);
+            camera.render_texture_static(equipped_items[i].texture, &slot_rect);
         }
     }
 }
@@ -131,8 +138,8 @@ item_t *player_t::hovered_equipment(vec2i mp) {
                           i / 2 * inventory.slot_size + base_offset.y + spacing.x,
                           inventory.slot_size, inventory.slot_size};
         if (mp.x > rect.x && mp.x < rect.x + rect.w && mp.y > rect.y && mp.y < rect.y + rect.h) {
-            item_t *item = equipped_items[i];
-            if (item != NULL)
+            item_t *item = &equipped_items[i];
+            if (item->id > 0)
                 return item;
         }
     }
@@ -153,23 +160,21 @@ void player_t::consume(item_t *item) {
             take_damage(item->amount);
         inventory.remove_item(item);
     }
-
     else {
-        item_t *old_item = equipped_items[item->type];
-        equipped_items[item->type] = item;
+        item_t old_item = equipped_items[item->type];
+        equipped_items[item->type] = *item;
         inventory.remove_item(item);
 
-        if (old_item != NULL)
+        if (old_item.id > 0)
             inventory.add_item(old_item);
 
         if (item->type == ItemType::Sword)
-            stats.strength = stats.base_strength + item->amount;
+            stats.strength = stats.base_strength + equipped_items[item->type].amount;
 
         if (item->type == ItemType::Wand)
-            stats.magic = stats.base_magic + item->amount;
+            stats.magic = stats.base_magic + equipped_items[item->type].amount;
     }
 }
-
 
 void player_t::take_damage(int amount) {
     stats.health -= amount;

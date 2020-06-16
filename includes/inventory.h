@@ -24,7 +24,6 @@ typedef struct {
 
     item_t *slot_hovered(vec2i mp);
 
-    void add_item(item_t *item);
     void add_item(item_t item);
     void remove_item(item_t *item);
 

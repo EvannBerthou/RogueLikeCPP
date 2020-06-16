@@ -10,7 +10,7 @@ static SDL_Color color_from_rarity(int rarity) {
 }
 
 void render_tooltip(camera_t &camera, texture_dict &textures,
-                                 item_t *item, TTF_Font *font, vec2i mp) {
+                    item_t *item, TTF_Font *font, vec2i mp) {
     SDL_Rect rect = { mp.x, mp.y, 225, 125 };
     camera.render_texture_static(textures.get_texture_by_name("bg"), &rect);
     render_text(camera.renderer, font, item->name.c_str(),{mp.x+20,mp.y+10},
@@ -32,11 +32,6 @@ void inventory_t::init_inventory() {
     {
         slots[i].id = -1;
     }
-}
-
-// FIXME: a supprimer
-void inventory_t::add_item(item_t *item) {
-    add_item(*item);
 }
 
 void inventory_t::add_item(item_t item) {
@@ -113,6 +108,7 @@ void inventory_t::remove_item(item_t *item) {
     for (int i = 0; i < INVENTORY_SIZE; ++i) {
         if (&slots[i] == item) {
             slots[i].id = -1;
+            slots[i].texture = NULL;
             return;
         }
     }

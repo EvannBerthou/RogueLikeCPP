@@ -29,11 +29,12 @@ typedef struct player_t {
 
     chest_t *in_chest = NULL;
 
-    item_t *equipped_items[EQUIPMENT_SLOTS] = {};
+    item_t equipped_items[EQUIPMENT_SLOTS] = {};
     bool render_equipment_menu = false;
     vec2i base_offset = vec2i(0,0);
     vec2i spacing = vec2i(0,0);
 
+    void init_equipment();
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);
     void render(camera_t &camera, int offset, texture_dict &characters_textures);
