@@ -11,19 +11,20 @@ static SDL_Color color_from_rarity(int rarity) {
 
 void render_tooltip(camera_t &camera, texture_dict &textures,
                     item_t *item, TTF_Font *font, vec2i mp) {
-    SDL_Rect rect = { mp.x, mp.y, 225, 125 };
+    SDL_Rect rect = { mp.x, mp.y, (int)(225 * camera.scale), (int)(125 * camera.scale) };
     camera.render_texture_static(textures.get_texture_by_name("bg"), &rect);
-    render_text(camera.renderer, font, item->name.c_str(),{mp.x+20,mp.y+10},
+    render_text(camera.renderer, font, item->name.c_str(), mp + vec2i(20,10) * camera.scale,
                 color_from_rarity(item->rarity));
-    render_text(camera.renderer, font, item->description.c_str(), {mp.x+20,mp.y+30}, {255,255,255,255});
+    render_text(camera.renderer, font, item->description.c_str(), mp + vec2i(20,30) * camera.scale,
+                {255,255,255,255});
 
     if (item->type == ItemType::Sword) {
         std::string stat = "Strength : " + std::to_string(item->amount);
-        render_text(camera.renderer, font, stat.c_str(), {mp.x+20,mp.y+50}, {255,0,255,255});
+        render_text(camera.renderer, font, stat.c_str(), mp + vec2i(20,50) * camera.scale,{255,0,255,255});
     }
     if (item->type == ItemType::Wand) {
         std::string stat = "Magic : " + std::to_string(item->amount);
-        render_text(camera.renderer, font, stat.c_str(), {mp.x+20,mp.y+50}, {255,0,255,255});
+        render_text(camera.renderer, font, stat.c_str(), mp + vec2i(20,50) * camera.scale,{255,0,255,255});
     }
 }
 

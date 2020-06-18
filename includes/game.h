@@ -33,7 +33,8 @@ typedef struct game_t {
     player_t     player;
     camera_t     camera;
     fps_clock_t  fps_clock;
-    TTF_Font     *font;
+    TTF_Font     *full_font;
+    TTF_Font     *half_font;
 
     items_map items;
     texture_dict room_textures        =  texture_dict();
@@ -45,6 +46,7 @@ typedef struct game_t {
     vec2i mouse_position = {0,0};
     int turn_count = 0;
 
+    TTF_Font * get_font();
     void key_press(SDL_Event &event);
     void update();
     void render();

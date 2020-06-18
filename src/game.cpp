@@ -10,6 +10,10 @@
 #include "enemy.h"
 #include "game.h"
 
+TTF_Font * game_t::get_font() {
+    return camera.scale < 1 ? half_font : full_font;
+}
+
 static item_t * get_hovered_item(player_t &player, vec2i mp, bool &in_chest) {
     item_t *inv_item = player.inventory.slot_hovered(mp);
     if (inv_item != NULL) {
@@ -69,7 +73,8 @@ int game_t::init() {
     }
 
     IMG_Init(IMG_INIT_PNG);
-    font = create_font("font.ttf", 32);
+    full_font = create_font("font.ttf", 32);
+    half_font = create_font("font.ttf", 16);
 
     load_room_textures(room_textures, renderer);
     load_item_textures(items_textures, renderer);
@@ -238,28 +243,28 @@ void game_t::render() {
         player.prev_room->render(camera, offset, items_textures);
 
     player.render(camera, offset, characters_textures);
-    player.render_equipment(camera, items_textures, font);
+    player.render_equipment(camera, items_textures, get_font());
     player.inventory.render(camera, items_textures);
     if (player.in_chest != NULL)
         player.in_chest->inventory.render(camera, items_textures);
 
     item_t *item = get_hovered_item(player, mouse_position);
     if (item != NULL) {
-        render_tooltip(camera, items_textures, item, font, mouse_position);
+        render_tooltip(camera, items_textures, item, get_font(), mouse_position);
     }
-    render_text(camera.renderer, font, std::to_string(player.stats.health).c_str(),
+    render_text(camera.renderer, full_font, std::to_string(player.stats.health).c_str(),
                 {55,5}, {255,255,0,255});
 
     if (!player.inventory.active && !player.render_equipment_menu){
         world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
         if (world_item != NULL) {
-            render_tooltip(camera,items_textures, &world_item->item, font, mouse_position);
+            render_tooltip(camera,items_textures, &world_item->item, get_font(), mouse_position);
         }
     }
 
 
     //spell bar
-    player.spells.render(camera, items_textures, mouse_position, font);
+    player.spells.render(camera, items_textures, mouse_position, get_font());
 
     if (!player.inventory.active && !player.render_equipment_menu)
         camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
@@ -312,6 +317,7 @@ void game_t::exit() {
     SDL_DestroyRenderer(camera.renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    TTF_CloseFont(font);
+    TTF_CloseFont(full_font);
+    TTF_CloseFont(half_font);
     TTF_Quit();
 }

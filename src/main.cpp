@@ -52,7 +52,6 @@
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * render_text est lent a cause du SDL_DestroyTexture()
- * Les textes ne changent pas de taille en fonction de la taille de la fenetre (camera.scale)
  */
 
 int main(){
