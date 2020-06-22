@@ -1,13 +1,12 @@
 #include <iostream>
 #include "player.h"
 
-player_t create_player(room_t *current_room, texture_dict &characters_textures,
-                       texture_dict &items_textures) {
+player_t create_player(room_t *current_room, texture_dict &textures) {
     player_t player = {};
     player.in_room = current_room;
     player.prev_room = NULL;
     player.pos = vec2i(7,5);
-    player.anim = load_animation(characters_textures, "player");
+    player.anim = load_animation(textures, "player");
     player.facing_left = true;
 
     player.stats = {100,100,25,0};
@@ -23,10 +22,10 @@ player_t create_player(room_t *current_room, texture_dict &characters_textures,
     player.inventory.init_inventory();
     player.init_equipment();
 
-    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(1).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(2).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(3).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(0).texture = textures.get_texture_by_name("wand");
+    player.spells.spells.at(1).texture = textures.get_texture_by_name("wand");
+    player.spells.spells.at(2).texture = textures.get_texture_by_name("wand");
+    player.spells.spells.at(3).texture = textures.get_texture_by_name("wand");
 
     return player;
 }

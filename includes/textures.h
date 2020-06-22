@@ -36,8 +36,6 @@ typedef struct {
 
 } texture_dict;
 
-void load_room_textures(texture_dict &textures, SDL_Renderer *renderer);
-void load_item_textures(texture_dict &textures, SDL_Renderer *renderer);
-void load_characters_textures(texture_dict &textures, SDL_Renderer *renderer);
+texture_dict load_textures(SDL_Renderer *renderer);
 
 #endif

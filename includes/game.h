@@ -37,9 +37,7 @@ typedef struct game_t {
     TTF_Font     *half_font;
 
     items_map items;
-    texture_dict room_textures;
-    texture_dict items_textures;
-    texture_dict characters_textures;
+    texture_dict textures;
 
     SDL_Window *window;
     int offset;

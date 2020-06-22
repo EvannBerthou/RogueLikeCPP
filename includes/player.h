@@ -49,7 +49,6 @@ typedef struct player_t {
     void regen_health (int amount);
 } player_t;
 
-player_t create_player(room_t *current_room, texture_dict &characters_textures,
-                       texture_dict &items_textures);
+player_t create_player(room_t *current_room, texture_dict &textures);
 
 #endif

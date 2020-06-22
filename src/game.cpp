@@ -77,17 +77,14 @@ int game_t::init() {
     full_font = create_font("font.ttf", 32);
     half_font = create_font("font.ttf", 16);
 
-    load_room_textures(room_textures, renderer);
-    load_item_textures(items_textures, renderer);
-    load_characters_textures(characters_textures, renderer);
-
-    items = load_items(items_textures);
+    textures = load_textures(renderer);
+    items = load_items(textures);
 
     dungeon = generate_dungeon(time(NULL), 10);
-    generate_tiles(&dungeon, room_textures, renderer);
-    generate_enemies(&dungeon, characters_textures, items);
+    generate_tiles(&dungeon, textures, renderer);
+    generate_enemies(&dungeon, textures, items);
 
-    player = create_player(&dungeon.rooms[0], characters_textures, items_textures);
+    player = create_player(&dungeon.rooms[0], textures);
     camera = { renderer };
 
     dungeon.rooms.at(0).items.push_back({{2,5}, items["sword"].random_stats()});
@@ -235,19 +232,19 @@ void game_t::update() {
 }
 
 void game_t::render() {
-    player.in_room->render(camera, offset, items_textures);
+    player.in_room->render(camera, offset, textures);
     if (camera.in_transisition)
-        player.prev_room->render(camera, offset, items_textures);
+        player.prev_room->render(camera, offset, textures);
 
     player.render(camera, offset);
-    player.render_equipment(camera, items_textures, get_font());
-    player.inventory.render(camera, items_textures);
+    player.render_equipment(camera, textures, get_font());
+    player.inventory.render(camera, textures);
     if (player.in_chest != NULL)
-        player.in_chest->inventory.render(camera, items_textures);
+        player.in_chest->inventory.render(camera, textures);
 
     item_t *item = get_hovered_item(player, mouse_position);
     if (item != NULL) {
-        render_tooltip(camera, items_textures, item, get_font(), mouse_position);
+        render_tooltip(camera, textures, item, get_font(), mouse_position);
     }
     render_text(camera.renderer, full_font, std::to_string(player.stats.health).c_str(),
                 {55,5}, {255,255,0,255});
@@ -255,16 +252,16 @@ void game_t::render() {
     if (!player.inventory.active && !player.render_equipment_menu){
         world_item_t *world_item = player.in_room->has_item(camera.vec2_screen_to_room(mouse_position));
         if (world_item != NULL) {
-            render_tooltip(camera,items_textures, &world_item->item, get_font(), mouse_position);
+            render_tooltip(camera,textures, &world_item->item, get_font(), mouse_position);
         }
     }
 
 
     //spell bar
-    player.spells.render(camera, items_textures, mouse_position, get_font());
+    player.spells.render(camera, textures, mouse_position, get_font());
 
     if (!player.inventory.active && !player.render_equipment_menu)
-        camera.render_texture_to_room(items_textures.get_texture_by_name("selected"),
+        camera.render_texture_to_room(textures.get_texture_by_name("selected"),
                                       camera.vec2_screen_to_room(mouse_position));
 
 
@@ -308,9 +305,7 @@ void game_t::new_turn() {
 
 void game_t::exit() {
     dungeon.free();
-    room_textures.free();
-    items_textures.free();
-    characters_textures.free();
+    textures.free();
     SDL_DestroyRenderer(camera.renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
