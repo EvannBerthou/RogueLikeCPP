@@ -59,7 +59,8 @@
 
 int main(){
     game_t game = {};
-    if (game.init() > 0) { exit(1); }
+    if (game.init() > 0)
+        exit(1);
     game.run();
     game.exit();
     return 0;

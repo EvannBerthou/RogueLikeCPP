@@ -1,6 +1,36 @@
 #include <iostream>
 #include "player.h"
 
+player_t create_player(room_t *current_room, texture_dict &characters_textures,
+                       texture_dict &items_textures) {
+    player_t player = {};
+    player.in_room = current_room;
+    player.prev_room = NULL;
+    player.pos = vec2i(7,5);
+    player.anim = load_animation(characters_textures, "player");
+    player.facing_left = true;
+
+    player.stats = {100,100,25,0};
+    player.inventory = {};
+    player.spells = {};
+
+    player.in_chest = NULL;
+
+    player.render_equipment_menu = false;
+    player.base_offset = vec2i(0,0);
+    player.spacing = vec2i(0,0);
+
+    player.inventory.init_inventory();
+    player.init_equipment();
+
+    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(1).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(2).texture = items_textures.get_texture_by_name("wand");
+    player.spells.spells.at(3).texture = items_textures.get_texture_by_name("wand");
+
+    return player;
+}
+
 int get_direction_from_keycode(int keycode){
     switch (keycode){
     case SDLK_z: return 0;
@@ -90,9 +120,7 @@ void player_t::render(camera_t &camera, int offset) {
 
 void player_t::init_equipment() {
     for (size_t i = 0; i < EQUIPMENT_SLOTS; i++)
-    {
         equipped_items[i].id = -1;
-    }
 }
 
 void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Font *font) {

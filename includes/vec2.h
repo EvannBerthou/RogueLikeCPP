@@ -8,6 +8,7 @@ struct vector {
     T x;
     T y;
 
+    vector() = default;
     vector(T _x, T _y) {x = _x; y = _y;};
 
     T length(){

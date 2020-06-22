@@ -86,14 +86,8 @@ int game_t::init() {
     dungeon = generate_dungeon(time(NULL), 10);
     generate_tiles(&dungeon, room_textures, renderer);
     generate_enemies(&dungeon, characters_textures, items);
-    player = {&dungeon.rooms[0]};
-    player.anim = load_animation(characters_textures, "player");
-    player.inventory.init_inventory();
-    player.init_equipment();
-    player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(1).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(2).texture = items_textures.get_texture_by_name("wand");
-    player.spells.spells.at(3).texture = items_textures.get_texture_by_name("wand");
+
+    player = create_player(&dungeon.rooms[0], characters_textures, items_textures);
     camera = { renderer };
 
     dungeon.rooms.at(0).items.push_back({{2,5}, items["sword"].random_stats()});
@@ -103,6 +97,7 @@ int game_t::init() {
     dungeon.rooms.at(1).items.push_back({{7,5}, items["ds"].random_stats()});
 
     fps_clock = fps_clock_t();
+    offset = 100;
     return 0;
 }
 

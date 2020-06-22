@@ -16,22 +16,24 @@
 int constexpr EQUIPMENT_SLOTS = 6;
 
 typedef struct player_t {
+    player_t() = default;
     room_t *in_room;
-    room_t *prev_room = NULL;
-    vec2i pos = vec2i(7,5);
-    animation_t anim = {};
-    bool facing_left = true;
+    room_t *prev_room;
+    vec2i pos;
 
-    stats_t stats = {100,100,25,0};
-    inventory_t inventory = {};
-    spells_t spells = {};
+    animation_t anim;
+    bool facing_left;
 
-    chest_t *in_chest = NULL;
+    stats_t stats;
+    inventory_t inventory;
+    spells_t spells;
 
-    item_t equipped_items[EQUIPMENT_SLOTS] = {};
-    bool render_equipment_menu = false;
-    vec2i base_offset = vec2i(0,0);
-    vec2i spacing = vec2i(0,0);
+    chest_t *in_chest;
+
+    item_t equipped_items[EQUIPMENT_SLOTS];
+    bool render_equipment_menu;
+    vec2i base_offset;
+    vec2i spacing;
 
     void init_equipment();
     void update(double dt);
@@ -46,5 +48,8 @@ typedef struct player_t {
     void take_damage  (int amount);
     void regen_health (int amount);
 } player_t;
+
+player_t create_player(room_t *current_room, texture_dict &characters_textures,
+                       texture_dict &items_textures);
 
 #endif

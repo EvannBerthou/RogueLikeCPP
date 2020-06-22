@@ -37,14 +37,14 @@ typedef struct game_t {
     TTF_Font     *half_font;
 
     items_map items;
-    texture_dict room_textures        =  texture_dict();
-    texture_dict items_textures       =  texture_dict();
-    texture_dict characters_textures  =  texture_dict();
+    texture_dict room_textures;
+    texture_dict items_textures;
+    texture_dict characters_textures;
 
-    SDL_Window *window = NULL;
-    int offset = 100;
-    vec2i mouse_position = {0,0};
-    int turn_count = 0;
+    SDL_Window *window;
+    int offset;
+    vec2i mouse_position;
+    int turn_count;
 
     TTF_Font * get_font();
     void key_press(SDL_Event &event);
