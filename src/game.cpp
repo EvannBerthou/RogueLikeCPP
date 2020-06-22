@@ -9,6 +9,7 @@
 #include "pathfinding.h"
 #include "enemy.h"
 #include "game.h"
+#include "animation.h"
 
 TTF_Font * game_t::get_font() {
     return camera.scale < 1 ? half_font : full_font;
@@ -86,6 +87,7 @@ int game_t::init() {
     generate_tiles(&dungeon, room_textures, renderer);
     generate_enemies(&dungeon, characters_textures, items);
     player = {&dungeon.rooms[0]};
+    player.anim = load_animation(characters_textures, "player");
     player.inventory.init_inventory();
     player.init_equipment();
     player.spells.spells.at(0).texture = items_textures.get_texture_by_name("wand");
@@ -242,7 +244,7 @@ void game_t::render() {
     if (camera.in_transisition)
         player.prev_room->render(camera, offset, items_textures);
 
-    player.render(camera, offset, characters_textures);
+    player.render(camera, offset);
     player.render_equipment(camera, items_textures, get_font());
     player.inventory.render(camera, items_textures);
     if (player.in_chest != NULL)

@@ -12,8 +12,7 @@ int get_direction_from_keycode(int keycode){
 }
 
 void player_t::update(double dt) {
-    frame_time += dt / 500;
-    frame = ((int)frame_time) % frame_count;
+    anim.update(dt);
 }
 
 vec2i get_next_tile_pos(int dir, vec2i pos) {
@@ -74,18 +73,16 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     return return_value;
 }
 
-void player_t::render(camera_t &camera, int offset, texture_dict &characters_textures) {
-    SDL_Rect player_rect;
+void player_t::render(camera_t &camera, int offset) {
 
     int center_x = camera.w / 2 - (15*camera.tile_size + camera.tile_size) / 2;
     int center_y = camera.h / 2 - (11*camera.tile_size + camera.tile_size) / 2;
 
+    SDL_Rect player_rect;
     player_rect = {pos.x * camera.tile_size + center_x + in_room->pos.x * (15 * camera.tile_size + offset),
                    pos.y * camera.tile_size + center_y + in_room->pos.y * (11 * camera.tile_size + offset),
                    camera.tile_size, camera.tile_size};
-    std::string texture_to_load = "player" + std::to_string(this->frame);
-    camera.render_texture(characters_textures.get_texture_by_name(texture_to_load),
-                          &player_rect, this->facing_left);
+    anim.render(camera, &player_rect, facing_left);
 
     SDL_Rect health_rect = {5,5, (int)(stats.health * 1.5), 30};
     camera.render_fill_rect_static({222,23,56,255}, &health_rect);

@@ -11,6 +11,7 @@
 #include "vec2.h"
 #include "stats.h"
 #include "chest.h"
+#include "animation.h"
 
 int constexpr EQUIPMENT_SLOTS = 6;
 
@@ -18,9 +19,7 @@ typedef struct player_t {
     room_t *in_room;
     room_t *prev_room = NULL;
     vec2i pos = vec2i(7,5);
-    double frame_time = 0;
-    int frame = 0;
-    int frame_count = 4;
+    animation_t anim = {};
     bool facing_left = true;
 
     stats_t stats = {100,100,25,0};
@@ -37,7 +36,7 @@ typedef struct player_t {
     void init_equipment();
     void update(double dt);
     bool move(SDL_Event event, camera_t *camera);
-    void render(camera_t &camera, int offset, texture_dict &characters_textures);
+    void render(camera_t &camera, int offset);
     void render_equipment(camera_t &camera, texture_dict &textures, TTF_Font *font);
     item_t *hovered_equipment(vec2i mp);
     void consume(item_t *item);

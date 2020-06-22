@@ -46,12 +46,15 @@
  * Ajouter des effets
  *      Animation lors d'un sort
  *          Flash rouge quand l'ennemie se toucher
+ *      Animations pour les sorts
  * Tooltip pour le sorts
  * Ajouter des drop tables
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * render_text est lent a cause du SDL_DestroyTexture()
+ * Ajouter un rect custom
+ * Simplifier la creation et le rendu du player
  */
 
 int main(){
