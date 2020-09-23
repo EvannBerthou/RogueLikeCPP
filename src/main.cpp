@@ -43,7 +43,6 @@
  * Interface avec les items equipés
  *      Ajouter des image pour montrer quel slot correspond à quel item
  * Message d'alerte quand une potion de heal redonne plus de vie que manquant
- * Si on ouvre un coffre alors qu'un autre est déjà ouvert, le premier ne se ferme pas
  *
  * Ajouter des effets
  *      Animation lors d'un sort

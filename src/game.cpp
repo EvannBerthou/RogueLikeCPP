@@ -145,6 +145,10 @@ void game_t::run() {
 
                     chest_t *chest = player.in_room->has_chest(camera.vec2_screen_to_room(mouse_position));
                     if (chest != NULL && distance(chest->pos, player.pos) < 2.0f) {
+                        if (player.in_chest) {
+                            player.in_chest->inventory.close_inventory();
+                            player.in_room->remove_chest(player.in_chest);
+                        }
                         player.inventory.open(true, false);
                         chest->inventory.open(true, true);
                         player.in_chest = chest;
