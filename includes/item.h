@@ -16,11 +16,12 @@ enum ItemType {
     Undefined
 };
 
-enum ItemEffect { Heal = 0, Damage, None};
+enum ItemEffect { None = 0, Heal, Damage};
 
 typedef struct item_t {
     int id;
     SDL_Texture *texture;
+    std::string texture_name;
     std::string name;
     std::string description;
     int rarity;

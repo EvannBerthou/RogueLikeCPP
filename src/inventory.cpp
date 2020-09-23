@@ -5,6 +5,7 @@ static SDL_Color color_from_rarity(int rarity) {
     switch(rarity) {
     case 0: return {255,255,255,255};
     case 1: return {0,255,255,255};
+    case 2: return {255,0,255,255};
     }
     return {255,255,255,255};
 }

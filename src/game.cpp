@@ -10,6 +10,7 @@
 #include "enemy.h"
 #include "game.h"
 #include "animation.h"
+#include "load_database_items.h"
 
 TTF_Font * game_t::get_font() {
     return camera.scale < 1 ? half_font : full_font;
@@ -78,7 +79,8 @@ int game_t::init() {
     half_font = create_font("font.ttf", 16);
 
     textures = load_textures(renderer);
-    items = load_items(textures);
+    items = load_database_items();
+    load_items_textures(items, textures);
 
     dungeon = generate_dungeon(time(NULL), 10);
     generate_tiles(&dungeon, textures, renderer);

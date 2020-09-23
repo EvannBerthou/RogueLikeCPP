@@ -1,5 +1,5 @@
 PKGS=sdl2 SDL2_ttf SDL2_image
-CXXFLAGS=-Wall -Wextra -g
+CXXFLAGS=-Wall -Wextra -g -l sqlite3
 LIBS=$(shell pkg-config --libs $(PKGS)) -lm
 
 SRCS=$(wildcard src/*.cpp)
@@ -16,3 +16,6 @@ dungeon: $(OBJS)
 
 clean:
 	rm -f $(MAIN_OBJS) $(LIBS_OBJS)
+
+create_db:
+	g++ db.cpp $(CXXFLAGS) -o db && ./db

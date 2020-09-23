@@ -1,4 +1,5 @@
 #include "game.h"
+#include "load_database_items.h"
 
 /*
  * TODO:
@@ -49,14 +50,17 @@
  *      Animations pour les sorts
  * Tooltip pour le sorts
  * Ajouter des drop tables
+ * Ajouter des animations à chaque étape d'un tour
+ * Ajouter des animations qui ne loop pas
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * render_text est lent a cause du SDL_DestroyTexture()
  * Ajouter un rect custom
+ * Stocker les items dans une base de donnée au lieu d'un fichier
  */
 
-int main(){
+int main() {
     game_t game = {};
     if (game.init() > 0)
         exit(1);

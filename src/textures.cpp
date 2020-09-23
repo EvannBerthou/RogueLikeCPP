@@ -40,3 +40,9 @@ texture_dict load_textures(SDL_Renderer *renderer) {
     textures.load_texture(renderer,  "ennemy",    "assets/images/ennemy.png");
     return textures;
 }
+
+void load_items_textures(std::unordered_map<std::string, item_t> &items, texture_dict &textures) {
+    for (auto& item : items) {
+        item.second.texture = textures.get_texture_by_name(item.second.texture_name);
+    }
+}

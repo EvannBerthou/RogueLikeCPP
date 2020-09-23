@@ -9,9 +9,6 @@
 #include "camera.h"
 #include "fonts.h"
 #include "textures.h"
-#include "items_loader.h"
-
-typedef std::unordered_map<std::string, item_t> items_map;
 
 typedef struct {
     using clock = std::chrono::time_point<std::chrono::steady_clock>;
@@ -36,7 +33,7 @@ typedef struct game_t {
     TTF_Font     *full_font;
     TTF_Font     *half_font;
 
-    items_map items;
+    std::unordered_map<std::string, item_t> items;
     texture_dict textures;
 
     SDL_Window *window;
