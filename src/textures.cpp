@@ -1,5 +1,30 @@
 #include "textures.h"
 
+SDL_Texture * texture_dict::get_texture_by_name(std::string name) {
+    if (textures.find(name) == textures.end()) {
+        std::cout << "texture \"" << name << "\" not found" << std::endl;
+        return textures["error"];
+    }
+    return textures[name];
+}
+
+SDL_Texture *texture_dict::load_texture(SDL_Renderer *renderer, std::string name, const char *path){
+    SDL_Texture *text = IMG_LoadTexture(renderer, path);
+    if (text == NULL) {
+        std::cout << "error while loading " << path << std::endl;
+        return NULL;
+    }
+    textures[name] = text;
+    return text;
+}
+
+void texture_dict::free() {
+    for (auto t : textures)
+        SDL_DestroyTexture(t.second);
+    textures.clear();
+}
+
+// TODO: Rewrite to load all sprites in a folder
 texture_dict load_textures(SDL_Renderer *renderer) {
     texture_dict textures;
     textures.load_texture(renderer,  "error", "assets/images/error_texture.png");

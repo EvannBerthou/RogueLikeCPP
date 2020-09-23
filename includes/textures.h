@@ -10,30 +10,9 @@
 
 typedef struct {
     std::unordered_map<std::string, SDL_Texture*> textures = {};
-
-    SDL_Texture * get_texture_by_name(std::string name) {
-        if (textures.find(name) == textures.end()) {
-            std::cout << "texture \"" << name << "\" not found" << std::endl;
-            return NULL;
-        }
-        return textures[name];
-    }
-
-    SDL_Texture *load_texture(SDL_Renderer *renderer, std::string name, const char *path){
-        SDL_Texture *text = IMG_LoadTexture(renderer, path);
-        if (text == NULL) {
-            std::cout << "error while loading " << path << std::endl;
-            return NULL;
-        }
-        textures[name] = text;
-        return text;
-    }
-
-    void free() {
-        for (auto t : textures)
-            SDL_DestroyTexture(t.second);
-        textures.clear();
-    }
+    SDL_Texture * get_texture_by_name(std::string name);
+    SDL_Texture * load_texture(SDL_Renderer *renderer, std::string name, const char *path);
+    void free();
 
 } texture_dict;
 
