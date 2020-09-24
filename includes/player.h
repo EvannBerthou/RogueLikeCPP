@@ -23,6 +23,7 @@ typedef struct player_t {
 
     animation_t anim;
     bool facing_left;
+    float moving_delay;
 
     stats_t stats;
     inventory_t inventory;

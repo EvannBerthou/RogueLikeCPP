@@ -42,7 +42,6 @@ texture_dict load_textures(SDL_Renderer *renderer) {
             if (std::equal(ext.rbegin(), ext.rend(), filename.rbegin())) {
                 filename.erase(filename.rfind('.'));
                 std::string full_path = folderpath + "/" + filename + ext;
-                std::cout << full_path << std::endl;
                 textures.load_texture(renderer, filename, full_path.c_str());
             }
         }

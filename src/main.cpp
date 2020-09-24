@@ -1,5 +1,4 @@
 #include "game.h"
-#include "load_database_items.h"
 
 /*
  * TODO:
@@ -19,6 +18,7 @@
  * Ajouter inventaire
  *      Tooltip sur les items
  *          valeur en argent
+ *          Ajuster le texte en fonction du nombre de ligne (mettre les stats en 2eme ligne si pas de desc)
  * Ajouter sorts
  *      Dégats de zone
  *      Status, soins
@@ -50,12 +50,12 @@
  * Ajouter des drop tables
  * Ajouter des animations à chaque étape d'un tour
  * Ajouter des animations qui ne loop pas
+ * Comparer avec l'équiement équipé sur le tooltip d'un item dans un coffre
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key
  * render_text est lent a cause du SDL_DestroyTexture()
  * Ajouter un rect custom
- * Refaire le chargement des textures
  *
  * Faire l'UI
  */

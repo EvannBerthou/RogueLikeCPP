@@ -8,6 +8,7 @@ player_t create_player(room_t *current_room, texture_dict &textures) {
     player.pos = vec2i(7,5);
     player.anim = load_animation(textures, "player");
     player.facing_left = true;
+    player.moving_delay = 0;
 
     player.stats = {100,100,25,0};
     player.inventory = {};
@@ -42,6 +43,10 @@ int get_direction_from_keycode(int keycode){
 
 void player_t::update(double dt) {
     anim.update(dt);
+    if (moving_delay > 0) {
+        moving_delay -= dt;
+        std::cout << moving_delay << std::endl;
+    }
 }
 
 vec2i get_next_tile_pos(int dir, vec2i pos) {
@@ -56,6 +61,7 @@ vec2i get_next_tile_pos(int dir, vec2i pos) {
 
 bool player_t::move(SDL_Event event, camera_t *camera) {
     if (inventory.active) return false;
+    if (moving_delay > 0) return false;
     if (event.key.keysym.sym == SDLK_q) facing_left = true;
     if (event.key.keysym.sym == SDLK_d) facing_left = false;
 
@@ -99,6 +105,7 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     }
     if (spells.selected_spell != -1)
         spells.spells.at(spells.selected_spell).set_spell_zone(pos);
+    moving_delay = 150; // ms
     return return_value;
 }
 
