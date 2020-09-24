@@ -19,8 +19,6 @@
  * Ajouter inventaire
  *      Tooltip sur les items
  *          valeur en argent
- *      Clique gauche pour consommer l'item (redonner de la vie avec potion par exemple)
- *          Répartir les effets dans différentes fonctions
  * Ajouter sorts
  *      Dégats de zone
  *      Status, soins
@@ -57,7 +55,9 @@
  * La vitesse du joueur dépend du repeat key
  * render_text est lent a cause du SDL_DestroyTexture()
  * Ajouter un rect custom
- * Stocker les items dans une base de donnée au lieu d'un fichier
+ * Refaire le chargement des textures
+ *
+ * Faire l'UI
  */
 
 int main() {

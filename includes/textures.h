@@ -13,7 +13,6 @@ typedef struct {
     SDL_Texture * get_texture_by_name(std::string name);
     SDL_Texture * load_texture(SDL_Renderer *renderer, std::string name, const char *path);
     void free();
-
 } texture_dict;
 
 texture_dict load_textures(SDL_Renderer *renderer);

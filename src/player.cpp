@@ -131,7 +131,7 @@ void player_t::render_equipment(camera_t &camera, texture_dict &textures, TTF_Fo
     spacing = vec2i(30, 40) * camera.scale;
 
     SDL_Rect bg_rect = { base_offset.x, base_offset.y, size.x, size.y };
-    camera.render_texture_static(textures.get_texture_by_name("bg"), &bg_rect);
+    camera.render_texture_static(textures.get_texture_by_name("ui_bg"), &bg_rect);
 
     stats.render(camera, font, {base_offset.x + 2 * inventory.slot_size + spacing.x,
                                 base_offset.y + spacing.y});
