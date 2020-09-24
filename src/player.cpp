@@ -31,41 +31,48 @@ player_t create_player(room_t *current_room, texture_dict &textures) {
     return player;
 }
 
-int get_direction_from_keycode(int keycode){
-    switch (keycode){
-    case SDLK_z: return 0;
-    case SDLK_d: return 1;
-    case SDLK_s: return 2;
-    case SDLK_q: return 3;
-    }
+void player_t::update(double dt) {
+    anim.update(dt);
+    if (moving_delay > 0)
+        moving_delay -= dt;
+}
+
+static int get_door_dir_from_player_direction(vec2i direction) {
+    if (direction == vec2i(0, -1)) return 0;
+    if (direction == vec2i(1, 0))  return 1;
+    if (direction == vec2i(0, 1))  return 2;
+    if (direction == vec2i(-1, 0)) return 3;
     return -1;
 }
 
-void player_t::update(double dt) {
-    anim.update(dt);
-    if (moving_delay > 0) {
-        moving_delay -= dt;
-        std::cout << moving_delay << std::endl;
-    }
-}
-
-vec2i get_next_tile_pos(int dir, vec2i pos) {
-    switch (dir){
-    case 0:  return pos + vec2i(0, -1);
-    case 1:  return pos + vec2i(1,  0);
-    case 2:  return pos + vec2i(0,  1);
-    case 3:  return pos + vec2i(-1, 0);
-    }
-    return pos;
-}
-
-bool player_t::move(SDL_Event event, camera_t *camera) {
+bool player_t::move(camera_t *camera) {
     if (inventory.active) return false;
     if (moving_delay > 0) return false;
-    if (event.key.keysym.sym == SDLK_q) facing_left = true;
-    if (event.key.keysym.sym == SDLK_d) facing_left = false;
 
-    vec2i next_pos = get_next_tile_pos(get_direction_from_keycode(event.key.keysym.sym), pos);
+    const Uint8 *keyboard_state = SDL_GetKeyboardState(NULL);
+
+    int direction_x = keyboard_state[SDL_SCANCODE_D] - keyboard_state[SDL_SCANCODE_A];
+    int direction_y = keyboard_state[SDL_SCANCODE_S] - keyboard_state[SDL_SCANCODE_W];
+
+    vec2i direction;
+    if (direction_x && direction_y) {
+        if (last_key == 0 || last_key == 2) { // W or S
+            direction.x = direction_x;
+            direction.y = 0;
+        }
+        else {
+            direction.x = 0;
+            direction.y = direction_y;
+        }
+    }
+    else {
+        direction.x = direction_x;
+        direction.y = direction_y;
+    }
+
+    if (direction.x != 0) facing_left = direction.x < 0;
+
+    vec2i next_pos = pos + direction;
 
     if (in_room->has_chest(next_pos))
         return false;
@@ -87,7 +94,7 @@ bool player_t::move(SDL_Event event, camera_t *camera) {
     }
 
     if (in_room->get_tile_at_xy(pos)->door){
-        int dir = get_direction_from_keycode(event.key.keysym.sym);
+        int dir = get_door_dir_from_player_direction(direction);
         if (dir != -1){
             if (in_room->doors[dir] != NULL){
                 room_t *new_room = in_room->doors[dir];

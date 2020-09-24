@@ -51,6 +51,7 @@
  * Ajouter des animations à chaque étape d'un tour
  * Ajouter des animations qui ne loop pas
  * Comparer avec l'équiement équipé sur le tooltip d'un item dans un coffre
+ * Transitionner lors du déplacement du joueur
  *
  * TECHNIQUE:
  * La vitesse du joueur dépend du repeat key

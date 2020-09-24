@@ -184,10 +184,11 @@ void game_t::run() {
 }
 
 void game_t::key_press(SDL_Event &event) {
-    if (!camera.in_transisition) {
-        if (player.move(event, &camera))
-            new_turn();
-    }
+    if (event.key.keysym.sym == SDLK_w) player.last_key = 0;
+    else if (event.key.keysym.sym == SDLK_d) player.last_key = 1;
+    else if (event.key.keysym.sym == SDLK_s) player.last_key = 2;
+    else if (event.key.keysym.sym == SDLK_q) player.last_key = 3;
+
     if (event.key.keysym.sym == SDLK_e) player.stats.health -= 10;
 
     if (event.key.keysym.sym == SDLK_c && !player.inventory.active)
@@ -222,6 +223,11 @@ void game_t::key_press(SDL_Event &event) {
 void game_t::update() {
     camera.update(fps_clock.dt);
     player.update(fps_clock.dt);
+
+    if (!camera.in_transisition) {
+        if (player.move(&camera))
+            new_turn();
+    }
 
     //Center camera on the room where the player is
     if (!camera.in_transisition && !camera.shaking){

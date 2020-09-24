@@ -24,6 +24,7 @@ typedef struct player_t {
     animation_t anim;
     bool facing_left;
     float moving_delay;
+    int last_key;
 
     stats_t stats;
     inventory_t inventory;
@@ -38,7 +39,7 @@ typedef struct player_t {
 
     void init_equipment();
     void update(double dt);
-    bool move(SDL_Event event, camera_t *camera);
+    bool move(camera_t *camera);
     void render(camera_t &camera, int offset);
     void render_equipment(camera_t &camera, texture_dict &textures, TTF_Font *font);
     item_t *hovered_equipment(vec2i mp);
